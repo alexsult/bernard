@@ -1,0 +1,17 @@
+[package]
+name = "bernard"
+version = "0.1.0"
+authors = ["Alexis SULTAN <alex@brindille.org>"]
+
+[dependencies]
+hyper = "0.11"
+serde_json = "1.0"
+serde = "1.0"
+serde_derive = "1.0"
+futures = "0.1"
+tokio-core = "0.1"
+brainz_macros = { path = "brainz_macros" }
+
+[dependencies.uuid]
+version="0.5"
+features=["serde"]
