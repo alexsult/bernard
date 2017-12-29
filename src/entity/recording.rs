@@ -1,44 +1,45 @@
 use entity::artist::ArtistCredit;
 use uuid::Uuid;
-use utils;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct Recording {
-    pub title: Option<String>,
-    pub isrcs: Vec<String>,
-    #[serde(deserialize_with="utils::uuid_from_string")]
-    #[serde(serialize_with="utils::string_from_uuid")]
-    pub id: Uuid,
-    pub disambiguation: Option<String>,
-    pub artist_credit: ArtistCredit
+    pub title: String,
+    pub disambiguation: String,
+    pub length:  i32,
+    pub video: bool,
+    pub artist_credit: Option<ArtistCredit>,
+    pub isrcs: Option<Vec<String>>,
+    pub id: Option<Uuid>
 }
 
 impl Recording {
-    pub fn new(title: Option<String>,
-               isrcs: Vec<String>,
-               id: Uuid,
-               disambiguation: Option<String>,
-               artist_credit: ArtistCredit) -> Recording {
+    pub fn new(title: String,
+               disambiguation: String,
+               length: i32,
+               video: bool) -> Recording {
+        
+        let mut recording = Recording::empty();
 
-        Recording {
-            title: title,
-            isrcs: isrcs,
-            id: id,
-            disambiguation: disambiguation,
-            artist_credit: artist_credit
-        }
+        recording.title = title;
+        recording.disambiguation = disambiguation;
+        recording.length = length;
+        recording.video = video;
+
+        recording
     }
 
     pub fn empty() -> Recording {
-        Recording::new(
-            None,
-            Vec::new(),
-            Uuid::nil(),
-            None,
-            ArtistCredit::empty()
-        )
+        Recording {
+            title: String::from(""),
+            disambiguation: String::from(""),
+            length:  0,
+            video: false,
+            artist_credit: None,
+            isrcs: None,
+            id: None
+        }
     }
 }
 

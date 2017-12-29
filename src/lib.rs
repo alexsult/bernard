@@ -11,13 +11,12 @@ extern crate serde_derive;
 extern crate brainz_macros;
 
 use std::collections::HashMap;
-use std::io::Read;
 use error::Error;
 use futures::{Future, Stream};
 use tokio_core::reactor::Core;
 
 #[derive(Debug)]
-pub struct MusicBrainz {
+pub struct Bernard {
     client: hyper::Client<hyper::client::HttpConnector, hyper::Body>,
     user_agent: String
 }
@@ -29,26 +28,22 @@ pub fn get_endpoint(struct_type: &str) -> Result<String,Error> {
     }
 }
 
-impl MusicBrainz {
-    /// Instantiates a new `MusicBrainz` struct.
+impl Bernard {
+    /// Instantiates a new `Bernard` struct.
     ///
-    /// The `MusicBrainz` struct contains useful methods required by the library.
+    /// The `Bernard` struct contains useful methods required by the library.
     /// It must be instantiated before using the implemented methods.
     ///
     /// # Example
     ///
-    /// ```no_run
-    /// # use musicbrainz::*;
-    /// let musicbrainz = MusicBrainz::new();
-    /// ```
-    pub fn new(core: Core) -> MusicBrainz {
+    pub fn new(core: Core) -> Bernard {
         let user_agent = format!("{name}/{version} ( {homepage} )",
             name=env!("CARGO_PKG_NAME"), version=env!("CARGO_PKG_VERSION"),
             homepage=env!("CARGO_PKG_HOMEPAGE")
         );
 
 
-        MusicBrainz {
+        Bernard {
             client: hyper::Client::new(&core.handle()),
             user_agent: user_agent
         }
@@ -89,9 +84,9 @@ impl MusicBrainz {
         entity::artist::Artist::empty()
     }
 
-    pub fn release(&self) -> entity::release::Release {
-        entity::release::Release::empty()
-    }
+    //pub fn release(&self) -> entity::release::Release {
+    //    entity::release::Release::empty()
+    //}
 
 }
 

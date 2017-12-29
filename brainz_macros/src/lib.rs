@@ -1,5 +1,4 @@
 #![recursion_limit = "128"]
-#![feature(concat_idents)]
 extern crate proc_macro;
 extern crate syn;
 #[macro_use]
@@ -63,7 +62,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
 
         impl Entity for #struct_name {
             fn lookup(&self,
-                       client: &super::MusicBrainz,
+                       client: &super::super::Bernard,
                        entity_id: &Uuid,
                        params: &mut HashMap<&str, &str>) -> Result<Self, Error> {
 
@@ -86,7 +85,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
             }
 
             fn search(&self, 
-                      client: &super::MusicBrainz, 
+                      client: &super::super::Bernard, 
                       params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error> {
 
                 let data = match client.get(&format!("{endpoint}",
@@ -107,7 +106,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
             }
 
             fn browse(&self, 
-                      client: &super::MusicBrainz, 
+                      client: &super::super::Bernard, 
                       params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error> {
 
                 let data = match client.get(&format!("{endpoint}",

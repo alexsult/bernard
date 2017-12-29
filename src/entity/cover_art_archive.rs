@@ -15,24 +15,26 @@ impl CoverArtArchive {
                darkened: bool, 
                count: i32, 
                artwork: bool) -> CoverArtArchive {
-        
-        CoverArtArchive {
-            back: back,
-            front: front,
-            darkened: darkened,
-            count: count,
-            artwork: artwork
-        }
+ 
+        let mut cover_art_archive = CoverArtArchive::empty();
+
+        cover_art_archive.back = back;
+        cover_art_archive.front = front;
+        cover_art_archive.darkened = darkened;
+        cover_art_archive.count = count;
+        cover_art_archive.artwork = artwork;
+
+        cover_art_archive
     }
 
     pub fn empty() -> CoverArtArchive {
-        CoverArtArchive::new(
-            false,
-            false,
-            false,
-            0,
-            false
-        )
+        CoverArtArchive {
+            back: false,
+            front: false,
+            darkened: false,
+            count: 0,
+            artwork: false
+        }
     }
 }
 

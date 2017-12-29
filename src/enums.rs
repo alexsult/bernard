@@ -68,7 +68,7 @@ pub enum AlbumType {
     DjMix,
     #[serde(rename="Mixtape/Street")]
     MixtapeStreet,
-    Other,
+    Other
 }
 
 impl Default for AlbumType {
@@ -230,6 +230,36 @@ impl fmt::Display for Packaging {
             Packaging::GatefoldCover => write!(f,"Gatefold Cover"),
             Packaging::DiscboxSlider => write!(f,"Discbox Slider"),
             Packaging::Other => write!(f,"Other")
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum Quality {
+    Low,
+    Normal,
+    High
+}
+
+impl FromStr for Quality {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Quality, ()> {
+        match s {
+            "low" => Ok(Quality::Low),
+            "normal" => Ok(Quality::Normal),
+            "high" => Ok(Quality::High),
+            _ => Err(()),
+        } 
+    }
+}
+
+impl fmt::Display for Quality {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Quality::Low => write!(f, "Low"),
+            Quality::Normal => write!(f, "Normal"),
+            Quality::High => write!(f, "High")
         }
     }
 }

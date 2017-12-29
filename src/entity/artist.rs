@@ -1,20 +1,19 @@
 use uuid::Uuid;
-use enums::PersonType;
 use std::fmt;
 use std::collections::HashMap;
 use traits::Entity;
 use error::Error;
 use serde_json;
-use utils;
+use enums::PersonType;
 use entity::alias::Alias;
 use entity::release_group::ReleaseGroup;
-use entity::life_span::LifeSpan;
+//use entity::life_span::LifeSpan;
 use entity::area::Area;
-use entity::tag::Tag;
+//use entity::tag::Tag;
 use entity::recording::Recording;
 use entity::release::Release;
-use entity::work::Work;
-use entity::relation::Relation;
+//use entity::work::Work;
+//use entity::relation::Relation;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -29,36 +28,32 @@ pub struct Artist {
     pub area: Option<Area>,
     pub begin_area: Option<Area>,
     pub end_area: Option<Area>,
-    pub recordings: Vec<Recording>,
-    pub release_groups: Vec<ReleaseGroup>,
-    pub releases: Vec<Release>,
-    pub works: Vec:<Work>,
-    pub aliases: Vec<Alias>,
+    pub recordings: Option<Vec<Recording>>,
+    pub release_groups: Option<Vec<ReleaseGroup>>,
+    pub releases: Option<Vec<Release>>,
+    //pub works: Vec<Work>,
+    pub aliases: Option<Vec<Alias>>,
     pub annotation: Option<String>,
-    #[serde(deserialize_with="utils::uuid_from_string")]
-    #[serde(serialize_with="utils::string_from_uuid")]
     pub id: Option<Uuid>,
-    pub life_span: Option<LifeSpan>,
-    pub isnis: Vec<String>,
-    pub ipis: Vec<String>,
+    //pub life_span: Option<LifeSpan>,
+    pub isnis: Option<Vec<String>>,
+    pub ipis: Option<Vec<String>>,
     pub rating: Option<i32>,
-    pub relations: Vec<Relation>,
-    pub tags: Vec<Tag>,
+    //pub relations: Vec<Relation>,
+    //pub tags: Vec<Tag>,
 	#[serde(rename = "type")]
     pub artist_type: Option<PersonType>,
 	#[serde(rename = "type-id")]
-    #[serde(deserialize_with="utils::uuid_from_string")]
-    #[serde(serialize_with="utils::string_from_uuid")]
     pub artist_type_id: Option<Uuid>,
-    pub score: Option<i32>
+    pub score: Option<u8>
 }
 
-// TODO Sort again
 impl Artist {
     pub fn new(name: String, 
                sort_name: String,
                disambiguation: String) -> Artist {
-        let artist = Artist::empty();
+
+        let mut artist = Artist::empty();
         
         artist.name = name;
         artist.sort_name = sort_name;
@@ -68,27 +63,33 @@ impl Artist {
     }
 
     pub fn empty() -> Artist {
-        Artist::new(
-            Uuid::nil(),
-            None,
-            None,
-            None,
-            PersonType::Other,
-            Uuid::nil(),
-            Vec::new(),
-            Vec::new(),
-            None,
-            None,
-            LifeSpan::empty(),
-            None,
-            Area::empty(),
-            Area::empty(),
-            Area::empty(),
-            Vec::new(),
-            Vec::new(),
-            0,
-            Vec::new()
-        )
+        Artist {
+            name: String::from(""),
+            sort_name: String::from(""),
+            disambiguation: String::from(""),
+            gender: None,
+            gender_id: None,
+            country: None,
+            area: None,
+            begin_area: None,
+            end_area: None,
+            recordings: None,
+            release_groups: None,
+            releases: None,
+            //works: None,
+            aliases: None,
+            annotation: None,
+            id: None,
+            //life_span: None,
+            isnis: None,
+            ipis: None,
+            rating: None,
+            //relations: None,
+            //tags: None,
+            artist_type: None,
+            artist_type_id: None,
+            score: None
+        }
     }
 }
 
@@ -98,8 +99,10 @@ impl Default for Artist {
 
 impl PartialEq for Artist {
     fn eq(&self, other: &Artist) -> bool {
-        self.id == other.id &&
-        self.name == other.name
+        let self_artist_id = self.id.expect("self.artist_id doesn't exist");
+        let other_artist_id = other.id.expect("other.artist_id doesn't exist");
+
+        self_artist_id == other_artist_id
     }
 
     fn ne(&self, other: &Artist) -> bool {
@@ -109,7 +112,7 @@ impl PartialEq for Artist {
 
 impl fmt::Display for Artist {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "{name} ({type})", name=self.name.as_ref().unwrap(), type=self.artist_type)
+        writeln!(f,"{name}", name = self.name)
     }
 }
 

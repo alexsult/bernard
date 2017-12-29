@@ -1,75 +1,73 @@
 use uuid::Uuid;
-use utils;
 use error::Error;
 use std::collections::HashMap;
 use serde_json;
 use traits::Entity;
-use entity::tag::Tag;
+//use entity::tag::Tag;
 use entity::alias::Alias;
-use entity::relation::Relations;
+//use entity::relation::Relations;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct Area {
+    pub name: String,
+    pub sort_name: String,
+    pub disambiguation: String,
+    pub iso_3166_1_codes: Option<Vec<String>>,
+    pub iso_3166_2_codes: Option<Vec<String>>,
+    pub iso_3166_3_codes: Option<Vec<String>>,
+    pub aliases: Option<Vec<Alias>>,
+    pub annotation: Option<String>,
+    pub id: Option<Uuid>,
+    //pub life_span: Option<LifeSpan>,
+    pub isnis: Option<Vec<String>>,
+    pub ipis: Option<Vec<String>>,
+    pub rating: Option<i32>,
+    //pub relations: Option<Vec<Relation>>,
+    //pub tags: Option<Vec<Tag>>,
     #[serde(rename="type")]
     pub area_type: Option<String>,
-    #[serde(deserialize_with="utils::uuid_from_string")]
-    #[serde(serialize_with="utils::string_from_uuid")]
-    pub id: Uuid,
-    pub sort_name: Option<String>,
-    pub name: Option<String>,
-    pub disambiguation: Option<String>,
-    pub iso_3166_1_codes: Vec<String>,
-    pub iso_3166_2_codes: Vec<String>,
-    pub tags: Vec<Tag>,
-    pub aliases: Vec<Alias>,
-    pub score: Option<String>,
-    pub relation_list: Vec<Relations>
+    #[serde(rename = "type-id")]
+    pub artist_type_id: Option<Uuid>,
+    pub score: Option<u8>
 }
 
 impl Area {
-    pub fn new(area_type: Option<String>,
-               id: Uuid, 
-               sort_name: Option<String>, 
-               name: Option<String>, 
-               disambiguation: Option<String>,
-               iso_3166_1_codes: Vec<String>,
-               iso_3166_2_codes: Vec<String>,
-               tags: Vec<Tag>,
-               aliases: Vec<Alias>,
-               score: Option<String>,
-               relation_list: Vec<Relations>) -> Area { 
+    pub fn new(name: String,
+               sort_name: String,
+               disambiguation: String) -> Area { 
+    
+        let mut area = Area::empty();
 
-        Area {
-            area_type: area_type,
-            id: id,
-            sort_name: sort_name,
-            name: name, 
-            disambiguation: disambiguation,
-            iso_3166_1_codes: iso_3166_1_codes,
-            iso_3166_2_codes: iso_3166_2_codes,
-            tags: tags,
-            aliases: aliases,
-            score: score,
-            relation_list: relation_list
-        }
+        area.name = name;
+        area.sort_name = sort_name;
+        area.disambiguation = disambiguation;
+
+        area
     }
 
     pub fn empty() -> Area {
-        Area::new(
-            None,
-            Uuid::nil(),
-            None,
-            None,
-            None,
-            Vec::new(),
-            Vec::new(),
-            Vec::new(),
-            Vec::new(),
-            None,
-            Vec::new()
-        )
+        Area { 
+            name: String::from(""),
+            sort_name: String::from(""),
+            disambiguation: String::from(""),
+            iso_3166_1_codes: None,
+            iso_3166_2_codes: None,
+            iso_3166_3_codes: None,
+            aliases: None,
+            annotation: None,
+            id: None,
+            //life_span: None,
+            isnis: None,
+            ipis: None,
+            rating: None,
+            //relations: None,
+            //tags: None,
+            area_type: None,
+            artist_type_id: None,
+            score: None
+        }
     }
 }
 

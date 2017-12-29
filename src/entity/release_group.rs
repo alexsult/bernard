@@ -6,59 +6,51 @@ use traits::Entity;
 use error::Error;
 use serde_json;
 use entity::artist::ArtistCredit;
-use utils;
+use entity::release::Release;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct ReleaseGroup {
-    pub title: Option<String>,
-    pub release_date: Option<String>,
-    #[serde(deserialize_with="utils::uuid_from_string")]
-    #[serde(serialize_with="utils::string_from_uuid")]
-    pub id: Uuid,
-    #[serde(deserialize_with="utils::uuid_from_string")]
-    #[serde(serialize_with="utils::string_from_uuid")]
-    pub artist: Uuid,
-    pub artist_credit: Vec<ArtistCredit>,
-    pub disambiguation: Option<String>,
+    pub title: String,
+    pub disambiguation: String,
     pub primary_type: AlbumType,
-    pub secondary_types: Vec<AlbumType>
+    pub primary_type_id: Uuid,
+    pub secondary_types: Option<Vec<AlbumType>>,
+    pub first_release_date: Option<String>,
+    pub id: Option<Uuid>,
+    pub artist_credit: Option<Vec<ArtistCredit>>,
+    pub releases: Option<Vec<Release>>
 }
 
 impl ReleaseGroup {
-    pub fn new(title: Option<String>, 
-               release_date: Option<String>, 
-               id: Uuid, 
-               artist: Uuid, 
-               artist_credit: Vec<ArtistCredit>,
-               disambiguation: Option<String>,
-               primary_type: AlbumType, 
-               secondary_types: Vec<AlbumType>) -> ReleaseGroup {
+    pub fn new(title: String,
+               disambiguation: String,
+               primary_type: AlbumType,
+               primary_type_id: Uuid) -> ReleaseGroup {
 
-        ReleaseGroup {
-            title: title,
-            release_date: release_date,
-            id: id,
-            artist: artist,
-            artist_credit: artist_credit,
-            disambiguation: disambiguation,
-            primary_type: primary_type,
-            secondary_types: secondary_types
-        }
+        let mut release_group = ReleaseGroup::empty();
+        
+        release_group.title = title;
+        release_group.disambiguation = disambiguation;
+        release_group.primary_type = primary_type;
+        release_group.primary_type_id = primary_type_id;
+
+        release_group
     }
 
     pub fn empty() -> ReleaseGroup {
-        ReleaseGroup::new(
-            None,
-            None,
-            Uuid::nil(),
-            Uuid::nil(),
-            Vec::new(),
-            None,
-            AlbumType::Other,
-            Vec::new()
-        )
+        ReleaseGroup {
+            title: String::from(""),
+            disambiguation: String::from(""),
+            primary_type: AlbumType::Other,
+            primary_type_id: Uuid::parse_str("00000000-0000-0000-0000-000000000000").unwrap(),
+            secondary_types: None,
+            first_release_date: None,
+            id: None,
+            artist_credit: None,
+            releases: None
+        }
     }
 }
 
@@ -68,15 +60,16 @@ impl Default for ReleaseGroup {
 
 impl PartialEq for ReleaseGroup {
     fn eq(&self, other: &ReleaseGroup) -> bool {
-        self.id == other.id && self.artist == other.artist
+        let self_rg_id = self.id.expect("self.ReleaseGroup_id doesn't exist");
+        let other_rg_id = other.id.expect("other.ReleaseGroup_id doesn't exist");
+
+        self.id == other.id
     }
 }
 
 impl fmt::Display for ReleaseGroup {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "{id} {primary} {name}", id=self.id,
-                                             primary=self.primary_type, 
-                                             name=self.title.as_ref().unwrap())
+        writeln!(f, "{title} {primary}", title=self.title,
+                                         primary=self.primary_type)
     }
 }
-
