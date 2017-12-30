@@ -7,7 +7,7 @@ pub mod event;
 pub mod instrument;
 pub mod label;
 pub mod life_span;
-//pub mod place;
+pub mod place;
 //pub mod media;
 pub mod recording;
 pub mod relation;
