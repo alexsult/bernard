@@ -12,7 +12,7 @@ use entity::area::Area;
 //use entity::tag::Tag;
 use entity::recording::Recording;
 use entity::release::Release;
-//use entity::work::Work;
+use entity::work::Work;
 //use entity::relation::Relation;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
@@ -31,7 +31,7 @@ pub struct Artist {
     pub recordings: Option<Vec<Recording>>,
     pub release_groups: Option<Vec<ReleaseGroup>>,
     pub releases: Option<Vec<Release>>,
-    //pub works: Vec<Work>,
+    pub works: Option<Vec<Work>>,
     pub aliases: Option<Vec<Alias>>,
     pub annotation: Option<String>,
     pub id: Option<Uuid>,
@@ -76,7 +76,7 @@ impl Artist {
             recordings: None,
             release_groups: None,
             releases: None,
-            //works: None,
+            works: None,
             aliases: None,
             annotation: None,
             id: None,
