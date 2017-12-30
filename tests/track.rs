@@ -3,7 +3,7 @@ use bernard::*;
 
 #[test]
 fn test_track_instantation() {
-    let mut a = entity::track::Track::new(String::from("Creep"),
+    let a = entity::track::Track::new(String::from("Creep"),
                                           237933,
                                           1);
 

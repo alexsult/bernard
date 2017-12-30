@@ -13,7 +13,7 @@ pub mod recording;
 pub mod relation;
 pub mod release;
 pub mod release_group;
-//pub mod series;
+pub mod series;
 pub mod tag;
 pub mod track;
 pub mod work;
