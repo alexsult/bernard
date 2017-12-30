@@ -6,12 +6,12 @@ use uuid::Uuid;
 use enums::*;
 use serde_json;
 use entity::area::Area;
-//use entity::collection::Collection;
-//use entity::artist::ArtistCredit;
+use entity::collection::Collection;
+use entity::artist::ArtistCredit;
 use entity::cover_art_archive::CoverArtArchive;
-//use entity::label::{LabelInfo, Label};
-//use entity::media::Media;
-//use entity::release_group::ReleaseGroup;
+use entity::label::{LabelInfo, Label};
+use entity::media::Media;
+use entity::release_group::ReleaseGroup;
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24,11 +24,8 @@ pub struct ReleaseEvent {
 
 impl ReleaseEvent {
     pub fn new(date: String) -> ReleaseEvent{ 
-
         let mut realease_event = ReleaseEvent::empty();
-
         realease_event.date = date;
-
         realease_event
     }
 
@@ -61,16 +58,16 @@ pub struct Release {
     pub status_id: Option<Uuid>,
     pub packaging: Option<Packaging>,
     pub packaging_id: Option<Uuid>,
-    //pub collections: Option<Vec<Collection>>,
-    //pub release_group: Option<ReleaseGroup>,
-    //pub artist_credit: Option<Vec<ArtistCredit>>,
-    //pub label_info: Option<Vec<LabelInfo>>,
-    //pub media: Option<Vec<Media>>,
+    pub collections: Option<Vec<Collection>>,
+    pub release_group: Option<ReleaseGroup>,
+    pub artist_credit: Option<Vec<ArtistCredit>>,
+    pub label_info: Option<Vec<LabelInfo>>,
+    pub media: Option<Vec<Media>>,
     pub id: Option<Uuid>,
     pub date: Option<String>,
     pub country: Option<String>,
     pub area: Option<Area>,
-    //pub label: Option<Label>,
+    pub label: Option<Label>,
     pub catalog_number: Option<i32>,
     pub language: Option<String>,
     pub script: Option<String>,
@@ -108,16 +105,16 @@ impl Release {
             status_id: None,
             packaging: None,
             packaging_id: None,
-            //collections: None,
-            //release_group: None,
-            //artist_credit: None,
-            //label_info: None,
-            //media: None,
+            collections: None,
+            release_group: None,
+            artist_credit: None,
+            label_info: None,
+            media: None,
             id: None,
             date: None,
             country: None,
             area: None,
-            //label: None,
+            label: None,
             catalog_number: None,
             language: None,
             script: None,

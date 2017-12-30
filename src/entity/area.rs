@@ -3,9 +3,10 @@ use error::Error;
 use std::collections::HashMap;
 use serde_json;
 use traits::Entity;
-//use entity::tag::Tag;
+use entity::tag::Tag;
 use entity::alias::Alias;
-//use entity::relation::Relations;
+use entity::relation::Relation;
+use entity::life_span::LifeSpan;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -20,12 +21,12 @@ pub struct Area {
     pub aliases: Option<Vec<Alias>>,
     pub annotation: Option<String>,
     pub id: Option<Uuid>,
-    //pub life_span: Option<LifeSpan>,
+    pub life_span: Option<LifeSpan>,
     pub isnis: Option<Vec<String>>,
     pub ipis: Option<Vec<String>>,
     pub rating: Option<i32>,
-    //pub relations: Option<Vec<Relation>>,
-    //pub tags: Option<Vec<Tag>>,
+    pub relations: Option<Vec<Relation>>,
+    pub tags: Option<Vec<Tag>>,
     #[serde(rename="type")]
     pub area_type: Option<String>,
     #[serde(rename = "type-id")]
@@ -58,12 +59,12 @@ impl Area {
             aliases: None,
             annotation: None,
             id: None,
-            //life_span: None,
+            life_span: None,
             isnis: None,
             ipis: None,
             rating: None,
-            //relations: None,
-            //tags: None,
+            relations: None,
+            tags: None,
             area_type: None,
             artist_type_id: None,
             score: None

@@ -1,13 +1,13 @@
 use entity::artist::Artist;
-//use entity::place::Place;
-//use entity::event::Event;
+use entity::place::Place;
+use entity::event::Event;
 use entity::area::Area;
-//use entity::instrument::Instrument;
-//use entity::label::Label;
+use entity::instrument::Instrument;
+use entity::label::Label;
 use entity::recording::Recording;
 use entity::release::Release;
 use entity::release_group::ReleaseGroup;
-//use entity::series::Series;
+use entity::series::Series;
 use entity::work::Work;
 use uuid::Uuid;
 use enums::Direction;
@@ -25,14 +25,14 @@ pub struct Relation {
     pub relation_type_id: Option<Uuid>,
     pub area: Option<Area>,
     pub artist: Option<Artist>,
-    //pub event: Option<Event>,
-    //pub instrument: Option<Instrument>,
-    //pub label: Option<Label>,
-    //pub place: Option<Place>,
+    pub event: Option<Event>,
+    pub instrument: Option<Instrument>,
+    pub label: Option<Label>,
+    pub place: Option<Place>,
     pub recording: Option<Recording>,
     pub release: Option<Release>,
     pub release_group: Option<ReleaseGroup>,
-    //pub series: Option<Series>,
+    pub series: Option<Series>,
     pub work: Option<Work>,
     pub attributes: Option<Vec<String>>,
     pub begin: Option<String>,
@@ -61,14 +61,14 @@ impl Relation {
             relation_type_id: None,
             area: None,
             artist: None,
-            //event: None,
-            //instrument: None,
-            //label: None,
-            //place: None,
+            event: None,
+            instrument: None,
+            label: None,
+            place: None,
             recording: None,
             release: None,
             release_group: None,
-            //series: None,
+            series: None,
             work: None,
             attributes: None,
             begin: None,

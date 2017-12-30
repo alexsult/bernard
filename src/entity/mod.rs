@@ -1,6 +1,7 @@
 pub mod alias;
 pub mod area;
 pub mod artist;
+pub mod collection;
 pub mod cover_art_archive;
 pub mod disc;
 pub mod event;
