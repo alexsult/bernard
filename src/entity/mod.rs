@@ -4,7 +4,7 @@ pub mod artist;
 pub mod cover_art_archive;
 pub mod disc;
 pub mod event;
-//pub mod instrument;
+pub mod instrument;
 //pub mod label;
 pub mod life_span;
 //pub mod place;
