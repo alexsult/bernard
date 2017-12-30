@@ -10,7 +10,7 @@ pub mod life_span;
 //pub mod place;
 //pub mod media;
 pub mod recording;
-//pub mod relation;
+pub mod relation;
 pub mod release;
 pub mod release_group;
 //pub mod series;

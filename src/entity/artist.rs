@@ -9,11 +9,11 @@ use entity::alias::Alias;
 use entity::release_group::ReleaseGroup;
 use entity::life_span::LifeSpan;
 use entity::area::Area;
-//use entity::tag::Tag;
+use entity::tag::Tag;
 use entity::recording::Recording;
 use entity::release::Release;
 use entity::work::Work;
-//use entity::relation::Relation;
+use entity::relation::Relation;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -39,8 +39,8 @@ pub struct Artist {
     pub isnis: Option<Vec<String>>,
     pub ipis: Option<Vec<String>>,
     pub rating: Option<i32>,
-    //pub relations: Vec<Relation>,
-    //pub tags: Vec<Tag>,
+    pub relations: Option<Vec<Relation>>,
+    pub tags: Option<Vec<Tag>>,
 	#[serde(rename = "type")]
     pub artist_type: Option<PersonType>,
 	#[serde(rename = "type-id")]
@@ -84,8 +84,8 @@ impl Artist {
             isnis: None,
             ipis: None,
             rating: None,
-            //relations: None,
-            //tags: None,
+            relations: None,
+            tags: None,
             artist_type: None,
             artist_type_id: None,
             score: None

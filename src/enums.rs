@@ -263,3 +263,30 @@ impl fmt::Display for Quality {
         }
     }
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum Direction {
+    Backward,
+    Forward
+}
+
+impl FromStr for Direction {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Direction, ()> {
+        match s {
+            "backward" => Ok(Direction::Backward),
+            "forward" => Ok(Direction::Forward),
+            _ => Err(()),
+        } 
+    }
+}
+
+impl fmt::Display for Direction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Direction::Backward => write!(f, "Backward"),
+            Direction::Forward => write!(f, "Forward")
+        }
+    }
+}
