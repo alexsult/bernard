@@ -1,4 +1,3 @@
-use utils;
 use uuid::Uuid;
 use entity::tag::Tag;
 use entity::alias::Alias;

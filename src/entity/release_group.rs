@@ -63,7 +63,7 @@ impl PartialEq for ReleaseGroup {
         let self_rg_id = self.id.expect("self.ReleaseGroup_id doesn't exist");
         let other_rg_id = other.id.expect("other.ReleaseGroup_id doesn't exist");
 
-        self.id == other.id
+        self_rg_id == other_rg_id
     }
 }
 
