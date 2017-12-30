@@ -7,7 +7,7 @@ use serde_json;
 use enums::PersonType;
 use entity::alias::Alias;
 use entity::release_group::ReleaseGroup;
-//use entity::life_span::LifeSpan;
+use entity::life_span::LifeSpan;
 use entity::area::Area;
 //use entity::tag::Tag;
 use entity::recording::Recording;
@@ -35,7 +35,7 @@ pub struct Artist {
     pub aliases: Option<Vec<Alias>>,
     pub annotation: Option<String>,
     pub id: Option<Uuid>,
-    //pub life_span: Option<LifeSpan>,
+    pub life_span: Option<LifeSpan>,
     pub isnis: Option<Vec<String>>,
     pub ipis: Option<Vec<String>>,
     pub rating: Option<i32>,
@@ -80,7 +80,7 @@ impl Artist {
             aliases: None,
             annotation: None,
             id: None,
-            //life_span: None,
+            life_span: None,
             isnis: None,
             ipis: None,
             rating: None,
