@@ -3,9 +3,9 @@ use uuid::Uuid;
 use traits::Entity;
 use error::Error;
 use std::collections::HashMap;
-//use entity::artist::ArtistCredit;
-//use entity::tag::Tag;
-//use entity::relation::Relation;
+use entity::artist::ArtistCredit;
+use entity::tag::Tag;
+use entity::relation::Relation;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -19,9 +19,9 @@ pub struct Work {
     pub id: Option<Uuid>,
     #[serde(rename="type")]
     pub work_type: Option<String>,
-    //pub artist_credit: Option<ArtistCredit>,
-    //pub relations: Option<Vec<Relation>>,
-    //pub tags: Option<Vec<Tag>>
+    pub artist_credit: Option<ArtistCredit>,
+    pub relations: Option<Vec<Relation>>,
+    pub tags: Option<Vec<Tag>>
 }
 
 impl Work {
@@ -45,9 +45,9 @@ impl Work {
             language: None,
             id: None,
             work_type: None,
-            //artist_credit: None,
-            //relations: None,
-            //tags: None
+            artist_credit: None,
+            relations: None,
+            tags: None
         }
     }
 }

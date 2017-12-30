@@ -1,5 +1,5 @@
 use entity::recording::Recording;
-//use entity::artist::ArtistCredit;
+use entity::artist::ArtistCredit;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -11,7 +11,7 @@ pub struct Track {
     pub number: i32,
     pub id: Option<Uuid>,
     pub recording: Option<Recording>,
-    //pub artist_credit: Option<ArtistCredit>
+    pub artist_credit: Option<ArtistCredit>
 }
 
 impl Track {
@@ -35,7 +35,7 @@ impl Track {
             number: 0, 
             id: None,
             recording: None,
-            //artist_credit: None
+            artist_credit: None
         }
     }
 }
