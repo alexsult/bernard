@@ -2,7 +2,7 @@ pub mod alias;
 pub mod area;
 pub mod artist;
 pub mod cover_art_archive;
-//pub mod disc;
+pub mod disc;
 //pub mod event;
 //pub mod instrument;
 //pub mod label;
