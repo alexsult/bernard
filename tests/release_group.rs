@@ -1,10 +1,11 @@
 extern crate bernard;
+extern crate serde_json;
 use bernard::*;
+use enums;
 
 #[test]
 fn test_release_group_instantation() {
     let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
-                                                         String::from(""),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
 
@@ -18,7 +19,6 @@ fn test_release_group_instantation() {
 #[test]
 fn test_release_group_eq() {
     let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
-                                                         String::from(""),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
     
@@ -29,14 +29,12 @@ fn test_release_group_eq() {
 #[test]
 fn test_release_group_ne() {
     let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
-                                                         String::from(""),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
     
     a.id = Some(Uuid::parse_str("c5bc370b-95c2-3634-bb89-51bb2dce97c3").unwrap());
     
     let mut b = entity::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
-                                                         String::from(""),
                                                          enums::AlbumType::Album,
                                                          Uuid::parse_str("f529b476-6e62-324f-b0aa-1f3e33d313fc").unwrap());
     
@@ -49,16 +47,40 @@ fn test_release_group_ne() {
 #[should_panic]
 fn test_release_group_neq_panic() {
     let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
-                                                         String::from(""),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
     
     a.id = Some(Uuid::parse_str("c5bc370b-95c2-3634-bb89-51bb2dce97c3").unwrap());
     
     let mut b = entity::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
-                                                         String::from(""),
                                                          enums::AlbumType::Album,
                                                          Uuid::parse_str("f529b476-6e62-324f-b0aa-1f3e33d313fc").unwrap());
     
     assert_eq!(a, b);
+}
+
+/////////////////////
+// deserialization //
+/////////////////////
+
+#[test]
+fn test_release_group_parsing(){
+    let json_data = r#"{
+            "first-release-date": "2008-01-16",
+            "secondary-types": [
+                "Compilation"
+            ],
+            "primary-type-id": "f529b476-6e62-324f-b0aa-1f3e33d313fc",
+            "id": "0d69911b-28f0-38fb-b5f5-29cf26839e3e",
+            "primary-type": "Album",
+            "secondary-type-ids": [
+                "dd2a21e1-0c00-3729-a7a0-de60b84eb5d1"
+            ],
+            "title": "Mixmag Presents: Tech-Trance-Electro Madness",
+            "disambiguation": ""
+    }"#;
+
+    let res: entity::release_group::ReleaseGroup = serde_json::from_str(json_data).unwrap();
+    assert!(res.disambiguation.as_ref().unwrap() == "");
+    assert!(res.primary_type == enums::AlbumType::Album);
 }

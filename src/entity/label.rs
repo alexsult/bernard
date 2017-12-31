@@ -9,7 +9,7 @@ use entity::area::Area;
 pub struct Label {
     pub name: String,
     pub sort_name: String,
-    pub disambiguation: String,
+    pub disambiguation: Option<String>,
     pub label_code: Option<i32>,
     pub id: Option<Uuid>,
     pub ipis: Option<Vec<String>>,
@@ -24,14 +24,12 @@ pub struct Label {
 
 impl Label {
     pub fn new(name: String,
-           sort_name: String,
-           disambiguation: String) -> Label {
+           sort_name: String) -> Label {
         
         let mut label = Label::empty();
 
         label.name = name;
         label.sort_name = sort_name;
-        label.disambiguation = disambiguation;
 
         label
     }
@@ -40,7 +38,7 @@ impl Label {
         Label {
             name: String::new(),
             sort_name: String::new(),
-            disambiguation: String::new(),
+            disambiguation: None,
             label_code: None,
             id: None,
             ipis: None,

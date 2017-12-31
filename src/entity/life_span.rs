@@ -3,11 +3,13 @@
 pub struct LifeSpan {
     pub begin: Option<String>,
     pub end: Option<String>,
-    pub ended: bool
+    pub ended: Option<bool>
 }
 
 impl LifeSpan {
-    pub fn new(begin: Option<String>, end: Option<String>, ended: bool) -> LifeSpan {
+    pub fn new(begin: Option<String>, 
+               end: Option<String>, 
+               ended: Option<bool>) -> LifeSpan {
         let mut life_span = LifeSpan::empty();
         
         life_span.begin = begin;
@@ -21,7 +23,7 @@ impl LifeSpan {
         LifeSpan {
             begin: None,
             end: None,
-            ended: false
+            ended: None
         }
     }
 }

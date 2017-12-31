@@ -21,7 +21,7 @@ use entity::relation::Relation;
 pub struct Artist {
     pub name: String,
     pub sort_name: String,
-    pub disambiguation: String,
+    pub disambiguation: Option<String>,
     pub gender: Option<String>,
     pub gender_id: Option<Uuid>,
     pub country: Option<String>,
@@ -50,23 +50,21 @@ pub struct Artist {
 
 impl Artist {
     pub fn new(name: String, 
-               sort_name: String,
-               disambiguation: String) -> Artist {
+               sort_name: String) -> Artist {
 
         let mut artist = Artist::empty();
         
         artist.name = name;
         artist.sort_name = sort_name;
-        artist.disambiguation = disambiguation;
         
         artist
     }
 
     pub fn empty() -> Artist {
         Artist {
-            name: String::from(""),
-            sort_name: String::from(""),
-            disambiguation: String::from(""),
+            name: String::new(),
+            sort_name: String::new(),
+            disambiguation: None,
             gender: None,
             gender_id: None,
             country: None,

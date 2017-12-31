@@ -12,7 +12,7 @@ use entity::relation::Relation;
 #[serde(default)]
 pub struct Work {
     pub title: String,
-    pub disambiguation: String,
+    pub disambiguation: Option<String>,
     pub iwcs: Option<Vec<String>>,
     pub attributes: Option<Vec<String>>,
     pub language: Option<String>,
@@ -25,21 +25,19 @@ pub struct Work {
 }
 
 impl Work {
-    pub fn new(title: String,
-               disambiguation: String) -> Work {
+    pub fn new(title: String) -> Work {
 
         let mut work = Work::empty();
 
         work.title = title;
-        work.disambiguation = disambiguation;
 
         work
     }
 
     pub fn empty() -> Work {
         Work {
-            title: String::from(""),
-            disambiguation: String::from(""),
+            title: String::new(),
+            disambiguation: None,
             iwcs: None,
             attributes: None,
             language: None,

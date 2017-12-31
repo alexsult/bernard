@@ -12,7 +12,7 @@ use std::collections::HashMap;
 pub struct Place {
     pub name: String,
     pub address: String,
-    pub disambiguation: String,
+    pub disambiguation: Option<String>,
     pub area: Option<Area>,
     pub coordinates: Option<Coordinates>,
     pub id: Option<Uuid>,
@@ -23,14 +23,12 @@ pub struct Place {
 
 impl Place {
     pub fn new(name: String,
-               address: String,
-               disambiguation: String) -> Place {
+               address: String) -> Place {
 
         let mut place = Place::empty();
     
         place.name = name;
         place.address = address;
-        place.disambiguation = disambiguation;
 
         place
     }
@@ -39,8 +37,8 @@ impl Place {
     pub fn empty() -> Place {
         Place{
             name: String::new(),
-            disambiguation: String::new(),
             address: String::new(),
+            disambiguation: None,
             area: None,
             coordinates: None,
             id: None,

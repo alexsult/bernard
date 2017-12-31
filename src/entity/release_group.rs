@@ -13,9 +13,9 @@ use entity::release::Release;
 #[serde(default)]
 pub struct ReleaseGroup {
     pub title: String,
-    pub disambiguation: String,
     pub primary_type: AlbumType,
     pub primary_type_id: Uuid,
+    pub disambiguation: Option<String>,
     pub secondary_types: Option<Vec<AlbumType>>,
     pub first_release_date: Option<String>,
     pub id: Option<Uuid>,
@@ -25,14 +25,12 @@ pub struct ReleaseGroup {
 
 impl ReleaseGroup {
     pub fn new(title: String,
-               disambiguation: String,
                primary_type: AlbumType,
                primary_type_id: Uuid) -> ReleaseGroup {
 
         let mut release_group = ReleaseGroup::empty();
         
         release_group.title = title;
-        release_group.disambiguation = disambiguation;
         release_group.primary_type = primary_type;
         release_group.primary_type_id = primary_type_id;
 
@@ -41,10 +39,10 @@ impl ReleaseGroup {
 
     pub fn empty() -> ReleaseGroup {
         ReleaseGroup {
-            title: String::from(""),
-            disambiguation: String::from(""),
+            title: String::new(),
             primary_type: AlbumType::Other,
-            primary_type_id: Uuid::parse_str("00000000-0000-0000-0000-000000000000").unwrap(),
+            primary_type_id: Uuid::nil(),
+            disambiguation: None,
             secondary_types: None,
             first_release_date: None,
             id: None,

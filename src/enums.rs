@@ -265,9 +265,14 @@ impl fmt::Display for Quality {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "kebab-case")]
 pub enum Direction {
     Backward,
     Forward
+}
+
+impl Default for Direction {
+    fn default() -> Direction { Direction::Backward }
 }
 
 impl FromStr for Direction {

@@ -10,7 +10,7 @@ use entity::relation::Relation;
 #[serde(default)]
 pub struct Series {
     pub name: String,
-    pub disambiguation: String,
+    pub disambiguation: Option<String>,
     pub id: Option<Uuid>,
     #[serde(rename="type")]
     pub series_type: Option<String>,
@@ -19,13 +19,11 @@ pub struct Series {
 }
 
 impl Series {
-    pub fn new(name: String,
-               disambiguation: String) -> Series {
+    pub fn new(name: String) -> Series {
 
         let mut series = Series::empty();
 
         series.name = name;
-        series.disambiguation = disambiguation;
 
         series
     }
@@ -33,7 +31,7 @@ impl Series {
     pub fn empty() -> Series {
         Series {
             name: String::from(""),
-            disambiguation: String::from(""),
+            disambiguation: None,
             id: None,
             series_type: None,
             series_type_id: None,

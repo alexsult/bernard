@@ -11,8 +11,8 @@ use entity::relation::Relation;
 #[serde(default)]
 pub struct Event {
     pub name: String,
-    pub disambiguation: String,
     pub canceled: bool,
+    pub disambiguation: Option<String>,
     pub time: Option<String>,
     pub setlist: Option<String>,
     pub id: Option<Uuid>,
@@ -26,13 +26,11 @@ pub struct Event {
 
 impl Event {
     pub fn new(name: String,
-               disambiguation: String,
                canceled: bool) -> Event {
 
         let mut event = Event::empty();
 
         event.name = name;
-        event.disambiguation = disambiguation;
         event.canceled = canceled;
 
         event
@@ -41,8 +39,8 @@ impl Event {
     pub fn empty() -> Event {
         Event {
             name: String::new(),
-            disambiguation: String::new(),
             canceled: false,
+            disambiguation: None,
             time: None,
             setlist: None,
             id: None,

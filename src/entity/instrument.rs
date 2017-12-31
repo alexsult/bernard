@@ -12,7 +12,7 @@ pub struct Instrument {
     #[serde(rename = "type")]
     pub instrument_type: Option<String>,
     pub tags: Option<Vec<Tag>>,
-    pub score: Option<u8>
+    pub score: Option<String>
 }
 
 impl Instrument {
