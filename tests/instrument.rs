@@ -59,6 +59,6 @@ fn test_instrument_parsing(){
     
     let res: entity::instrument::Instrument = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.instrument_type.unwrap(), "String instrument");
-    let aliases0 = &res.aliases.unwrap()[0];
-    assert_eq!(aliases0.clone().locale.unwrap(), "ja");
+    //let aliases0 = &res.aliases.unwrap()[0];
+    assert_eq!(&res.aliases.unwrap()[0].clone().locale.unwrap(), "ja");
 }
