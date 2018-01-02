@@ -36,7 +36,6 @@ fn test_relation_parsing(){
 
     let res: entity::relation::Relation = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.relation_type, "part of");
-    // XXX
-    //assert_eq!(res.direction, enums::Direction::Backward);
+    assert_eq!(res.direction, enums::Direction::Backward);
     assert_eq!(res.area.unwrap().area_type.unwrap(), "Subdivision");
 }

@@ -10,10 +10,12 @@ extern crate serde_derive;
 #[macro_use]
 extern crate brainz_macros;
 
+use std::env;
 use std::collections::HashMap;
 use error::Error;
 use futures::{Future, Stream};
 use tokio_core::reactor::Core;
+
 
 #[derive(Debug)]
 pub struct Bernard {
@@ -36,7 +38,7 @@ impl Bernard {
     ///
     /// # Example
     ///
-    pub fn new(core: Core) -> Bernard {
+    pub fn new(core: &Core) -> Bernard {
         let user_agent = format!("{name}/{version} ( {homepage} )",
             name=env!("CARGO_PKG_NAME"), version=env!("CARGO_PKG_VERSION"),
             homepage=env!("CARGO_PKG_HOMEPAGE")
@@ -51,7 +53,12 @@ impl Bernard {
 
     //fn get(&self, url: &str, params: &HashMap<&str, &str>) -> json::Result<json::JsonValue> {
     fn get(&self, url: &str, params: &HashMap<&str, &str>) -> Result<String, hyper::Error> {
-        let base_uri = "https://musicbrainz.org/ws/2";
+        // A bit dirty
+        let base_uri = match env::var("MBZ_URI") {
+            Ok(env_uri) => env_uri,
+            _ => String::from("https://musicbrainz.org/ws/2")
+        };
+
         let query_fmt = "fmt=json";
         
         let mut endpoint = format!("{}/{}?{}", base_uri, url, query_fmt);
@@ -84,9 +91,9 @@ impl Bernard {
         entity::artist::Artist::empty()
     }
 
-    //pub fn release(&self) -> entity::release::Release {
-    //    entity::release::Release::empty()
-    //}
+    pub fn release(&self) -> entity::release::Release {
+        entity::release::Release::empty()
+    }
 
 }
 
