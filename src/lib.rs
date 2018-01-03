@@ -79,7 +79,7 @@ impl Bernard {
             println!("POST: {}", res.status()); 
             res.body().concat2()
         });
-
+    
         //res.read_to_string(&mut buf).expect("failed to read response body to string");
 
         println!("buf {}", buf);

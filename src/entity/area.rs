@@ -5,7 +5,7 @@ use serde_json;
 use traits::Entity;
 use entity::tag::Tag;
 use entity::alias::Alias;
-use entity::relation::{Relation, Relations};
+use entity::relation::Relations;
 use entity::life_span::LifeSpan;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]

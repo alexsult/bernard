@@ -1,6 +1,7 @@
 use error::Error;
 use uuid::Uuid;
 use std::collections::HashMap;
+use futures::Future;
 
 pub trait Entity: Sized {
     /// Searches Bernard for entities based on the search query.

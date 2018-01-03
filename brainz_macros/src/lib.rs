@@ -6,7 +6,7 @@ extern crate quote;
 
 use proc_macro::TokenStream;
 
-// copy paste from:
+// copied pasted from:
 // https://doc.rust-lang.org/beta/book/procedural-macros.html
 #[proc_macro_derive(Entity)]
 pub fn entity(input: TokenStream) -> TokenStream {
@@ -83,7 +83,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
 
                 Ok(data_struct)
             }
-
+           
             fn search(&self, 
                       client: &super::super::Bernard, 
                       params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error> {
