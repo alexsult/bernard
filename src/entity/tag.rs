@@ -2,12 +2,11 @@
 #[serde(default)]
 pub struct Tag {
     pub name: String,
-    pub count: i32
+    pub count: i32,
 }
 
 impl Tag {
-    pub fn new(name: String,
-               count: i32) -> Tag {
+    pub fn new(name: String, count: i32) -> Tag {
 
         let mut tag = Tag::empty();
 
@@ -20,11 +19,13 @@ impl Tag {
     pub fn empty() -> Tag {
         Tag {
             name: String::from(""),
-            count: 0
+            count: 0,
         }
     }
 }
 
 impl Default for Tag {
-    fn default() -> Tag { Tag::empty() }
+    fn default() -> Tag {
+        Tag::empty()
+    }
 }

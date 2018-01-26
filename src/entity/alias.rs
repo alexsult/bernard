@@ -10,13 +10,12 @@ pub struct Alias {
     pub alias_type: Option<String>,
     pub begin_date: Option<String>,
     pub end_date: Option<String>,
-    pub score: Option<i32>
+    pub score: Option<i32>,
 }
 
 impl Alias {
-    pub fn new(name: String,
-               sort_name: String) -> Alias {
-        
+    pub fn new(name: String, sort_name: String) -> Alias {
+
         let mut alias = Alias::empty();
 
         alias.name = name;
@@ -34,11 +33,13 @@ impl Alias {
             alias_type: None,
             begin_date: None,
             end_date: None,
-            score: None
+            score: None,
         }
     }
 }
 
 impl Default for Alias {
-    fn default() -> Alias { Alias::empty() } 
+    fn default() -> Alias {
+        Alias::empty()
+    }
 }

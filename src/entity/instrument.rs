@@ -12,30 +12,32 @@ pub struct Instrument {
     #[serde(rename = "type")]
     pub instrument_type: Option<String>,
     pub tags: Option<Vec<Tag>>,
-    pub score: Option<String>
+    pub score: Option<String>,
 }
 
 impl Instrument {
-    pub fn new(name: String) -> Instrument { 
+    pub fn new(name: String) -> Instrument {
         let mut instrument = Instrument::empty();
 
         instrument.name = name;
-        
+
         instrument
     }
 
-    pub fn empty() -> Instrument { 
+    pub fn empty() -> Instrument {
         Instrument {
             name: String::new(),
             id: None,
             aliases: None,
             instrument_type: None,
             tags: None,
-            score: None
+            score: None,
         }
     }
 }
 
 impl Default for Instrument {
-    fn default() -> Instrument { Instrument::empty() }
+    fn default() -> Instrument {
+        Instrument::empty()
+    }
 }

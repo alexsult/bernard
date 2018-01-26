@@ -11,6 +11,7 @@ serde_derive = "1.0"
 futures = "0.1"
 tokio-core = "0.1"
 brainz_macros = { path = "brainz_macros" }
+percent-encoding = "1.0"
 
 [dependencies.uuid]
 version="0.5"

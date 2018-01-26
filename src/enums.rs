@@ -15,11 +15,13 @@ pub enum PersonType {
     /// Indicates an individual fictional character.
     Character,
     /// Anything which does not fit into the above categories.
-    Other
+    Other,
 }
 
 impl Default for PersonType {
-    fn default() -> PersonType{ PersonType::Other }
+    fn default() -> PersonType {
+        PersonType::Other
+    }
 }
 
 impl FromStr for PersonType {
@@ -46,7 +48,7 @@ impl fmt::Display for PersonType {
             PersonType::Orchestra => write!(f, "Orchestra"),
             PersonType::Choir => write!(f, "Choir"),
             PersonType::Character => write!(f, "Character"),
-            PersonType::Other => write!(f, "Other")
+            PersonType::Other => write!(f, "Other"),
         }
     }
 }
@@ -64,15 +66,17 @@ pub enum AlbumType {
     Audiobook,
     Live,
     Remix,
-    #[serde(rename="DJ-mix")]
+    #[serde(rename = "DJ-mix")]
     DjMix,
-    #[serde(rename="Mixtape/Street")]
+    #[serde(rename = "Mixtape/Street")]
     MixtapeStreet,
-    Other
+    Other,
 }
 
 impl Default for AlbumType {
-    fn default() -> AlbumType { AlbumType::Other }
+    fn default() -> AlbumType {
+        AlbumType::Other
+    }
 }
 
 impl FromStr for AlbumType {
@@ -94,7 +98,7 @@ impl FromStr for AlbumType {
             "DJ-mix" => Ok(AlbumType::DjMix),
             "Mixtape/Street" => Ok(AlbumType::MixtapeStreet),
             "Other" => Ok(AlbumType::Other),
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
@@ -115,7 +119,7 @@ impl fmt::Display for AlbumType {
             AlbumType::Remix => write!(f, "Remix"),
             AlbumType::DjMix => write!(f, "DJ-mix"),
             AlbumType::MixtapeStreet => write!(f, "Mixtape/Street"),
-            AlbumType::Other => write!(f, "Other")
+            AlbumType::Other => write!(f, "Other"),
         }
     }
 }
@@ -125,11 +129,13 @@ pub enum ReleaseStatus {
     Official,
     Promotion,
     Bootleg,
-    PseudoRelease
+    PseudoRelease,
 }
 
 impl Default for ReleaseStatus {
-    fn default() -> ReleaseStatus { ReleaseStatus::Official }
+    fn default() -> ReleaseStatus {
+        ReleaseStatus::Official
+    }
 }
 
 impl FromStr for ReleaseStatus {
@@ -141,7 +147,7 @@ impl FromStr for ReleaseStatus {
             "Promotion" => Ok(ReleaseStatus::Promotion),
             "Bootleg" => Ok(ReleaseStatus::Bootleg),
             "Pseudo Release" => Ok(ReleaseStatus::PseudoRelease),
-            _ => Err(())
+            _ => Err(()),
         }
     }
 }
@@ -149,44 +155,46 @@ impl FromStr for ReleaseStatus {
 impl fmt::Display for ReleaseStatus {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            ReleaseStatus::Official => write!(f,"Official"),
-            ReleaseStatus::Promotion => write!(f,"Promotion"),
-            ReleaseStatus::Bootleg => write!(f,"Bootleg"),
-            ReleaseStatus::PseudoRelease=> write!(f,"Pseudo Release")
+            ReleaseStatus::Official => write!(f, "Official"),
+            ReleaseStatus::Promotion => write!(f, "Promotion"),
+            ReleaseStatus::Bootleg => write!(f, "Bootleg"),
+            ReleaseStatus::PseudoRelease => write!(f, "Pseudo Release"),
         }
     }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum Packaging {
-    #[serde(rename="Jewel Case")]
+    #[serde(rename = "Jewel Case")]
     JewelCase,
-    #[serde(rename="Super Jewel Box/Case")]
+    #[serde(rename = "Super Jewel Box/Case")]
     SuperJewelCase,
-    #[serde(rename="Slim Jewel Case")]
+    #[serde(rename = "Slim Jewel Case")]
     SlimJewelCase,
     Digipak,
-    #[serde(rename="Cardboard/Paper Sleeve")]
+    #[serde(rename = "Cardboard/Paper Sleeve")]
     CardboardSleeve,
-    #[serde(rename="Keep Case")]
+    #[serde(rename = "Keep Case")]
     KeepCase,
-    #[serde(rename="None")]
+    #[serde(rename = "None")]
     NoPack,
-    #[serde(rename="Cassette Case")]
+    #[serde(rename = "Cassette Case")]
     CassetteCase,
     Book,
     Fatbox,
-    #[serde(rename="Snap Case")]
+    #[serde(rename = "Snap Case")]
     SnapCase,
-    #[serde(rename="Gatefold Cover")]
+    #[serde(rename = "Gatefold Cover")]
     GatefoldCover,
-    #[serde(rename="Discbox Slider")]
+    #[serde(rename = "Discbox Slider")]
     DiscboxSlider,
-    Other
+    Other,
 }
 
 impl Default for Packaging {
-    fn default() -> Packaging { Packaging::NoPack }
+    fn default() -> Packaging {
+        Packaging::NoPack
+    }
 }
 
 impl FromStr for Packaging {
@@ -199,16 +207,16 @@ impl FromStr for Packaging {
             "Slim Jewel Case" => Ok(Packaging::SlimJewelCase),
             "Digipak" => Ok(Packaging::Digipak),
             "Cardboard/Paper Sleeve" => Ok(Packaging::CardboardSleeve),
-            "Keep Case"  => Ok(Packaging::KeepCase),
-            "None"  => Ok(Packaging::NoPack),
-            "Cassette Case"  => Ok(Packaging::CassetteCase),
+            "Keep Case" => Ok(Packaging::KeepCase),
+            "None" => Ok(Packaging::NoPack),
+            "Cassette Case" => Ok(Packaging::CassetteCase),
             "Book" => Ok(Packaging::Book),
             "Fatbox" => Ok(Packaging::Fatbox),
             "Snap Case" => Ok(Packaging::SnapCase),
             "Gatefold Cover" => Ok(Packaging::GatefoldCover),
             "Discbox Slider" => Ok(Packaging::DiscboxSlider),
             "Other" => Ok(Packaging::Other),
-            _ => Ok(Packaging::NoPack)
+            _ => Ok(Packaging::NoPack),
         }
     }
 }
@@ -216,20 +224,20 @@ impl FromStr for Packaging {
 impl fmt::Display for Packaging {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Packaging::JewelCase => write!(f,"Jewel Case"),
-            Packaging::SuperJewelCase => write!(f,"Super Jewel Box/Case"),
-            Packaging::SlimJewelCase => write!(f,"Slim Jewel Case"),
-            Packaging::Digipak => write!(f,"Digipak"),
-            Packaging::CardboardSleeve => write!(f,"Cardboard/Paper Sleeve"),
-            Packaging::KeepCase => write!(f,"Keep Case"),
-            Packaging::NoPack => write!(f,"None"),
-            Packaging::CassetteCase => write!(f,"Cassette Case"),
-            Packaging::Book => write!(f,"Book"),
-            Packaging::Fatbox => write!(f,"Fatbox"),
-            Packaging::SnapCase => write!(f,"Snap Case"),
-            Packaging::GatefoldCover => write!(f,"Gatefold Cover"),
-            Packaging::DiscboxSlider => write!(f,"Discbox Slider"),
-            Packaging::Other => write!(f,"Other")
+            Packaging::JewelCase => write!(f, "Jewel Case"),
+            Packaging::SuperJewelCase => write!(f, "Super Jewel Box/Case"),
+            Packaging::SlimJewelCase => write!(f, "Slim Jewel Case"),
+            Packaging::Digipak => write!(f, "Digipak"),
+            Packaging::CardboardSleeve => write!(f, "Cardboard/Paper Sleeve"),
+            Packaging::KeepCase => write!(f, "Keep Case"),
+            Packaging::NoPack => write!(f, "None"),
+            Packaging::CassetteCase => write!(f, "Cassette Case"),
+            Packaging::Book => write!(f, "Book"),
+            Packaging::Fatbox => write!(f, "Fatbox"),
+            Packaging::SnapCase => write!(f, "Snap Case"),
+            Packaging::GatefoldCover => write!(f, "Gatefold Cover"),
+            Packaging::DiscboxSlider => write!(f, "Discbox Slider"),
+            Packaging::Other => write!(f, "Other"),
         }
     }
 }
@@ -238,7 +246,7 @@ impl fmt::Display for Packaging {
 pub enum Quality {
     Low,
     Normal,
-    High
+    High,
 }
 
 impl FromStr for Quality {
@@ -250,7 +258,7 @@ impl FromStr for Quality {
             "normal" => Ok(Quality::Normal),
             "high" => Ok(Quality::High),
             _ => Err(()),
-        } 
+        }
     }
 }
 
@@ -259,7 +267,7 @@ impl fmt::Display for Quality {
         match *self {
             Quality::Low => write!(f, "Low"),
             Quality::Normal => write!(f, "Normal"),
-            Quality::High => write!(f, "High")
+            Quality::High => write!(f, "High"),
         }
     }
 }
@@ -268,11 +276,13 @@ impl fmt::Display for Quality {
 #[serde(rename_all = "kebab-case")]
 pub enum Direction {
     Backward,
-    Forward
+    Forward,
 }
 
 impl Default for Direction {
-    fn default() -> Direction { Direction::Backward }
+    fn default() -> Direction {
+        Direction::Backward
+    }
 }
 
 impl FromStr for Direction {
@@ -283,7 +293,7 @@ impl FromStr for Direction {
             "backward" => Ok(Direction::Backward),
             "forward" => Ok(Direction::Forward),
             _ => Err(()),
-        } 
+        }
     }
 }
 
@@ -291,7 +301,7 @@ impl fmt::Display for Direction {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Direction::Backward => write!(f, "Backward"),
-            Direction::Forward => write!(f, "Forward")
+            Direction::Forward => write!(f, "Forward"),
         }
     }
 }

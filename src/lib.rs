@@ -4,6 +4,7 @@ extern crate serde_json;
 extern crate serde;
 extern crate futures;
 extern crate tokio_core;
+extern crate percent_encoding;
 
 #[macro_use]
 extern crate serde_derive;
@@ -13,20 +14,21 @@ extern crate brainz_macros;
 use std::env;
 use std::collections::HashMap;
 use error::Error;
-use futures::{Future, Stream};
+use futures::Future;
 use tokio_core::reactor::Core;
-
+use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
+use hyper::{Request, Body, Response};
 
 #[derive(Debug)]
 pub struct Bernard {
     client: hyper::Client<hyper::client::HttpConnector, hyper::Body>,
-    user_agent: String
+    user_agent: String,
 }
 
-pub fn get_endpoint(struct_type: &str) -> Result<String,Error> {
+pub fn get_endpoint(struct_type: &str) -> Result<String, Error> {
     match struct_type {
         "Artist" => Ok(String::from("artist")),
-        _ => Err(Error::AsSlice)
+        _ => Err(Error::AsSlice),
     }
 }
 
@@ -39,52 +41,55 @@ impl Bernard {
     /// # Example
     ///
     pub fn new(core: &Core) -> Bernard {
-        let user_agent = format!("{name}/{version} ( {homepage} )",
-            name=env!("CARGO_PKG_NAME"), version=env!("CARGO_PKG_VERSION"),
-            homepage=env!("CARGO_PKG_HOMEPAGE")
+        let user_agent = format!(
+            "{name}/{version} ( {homepage} )",
+            name = env!("CARGO_PKG_NAME"),
+            version = env!("CARGO_PKG_VERSION"),
+            homepage = env!("CARGO_PKG_HOMEPAGE")
         );
 
 
         Bernard {
             client: hyper::Client::new(&core.handle()),
-            user_agent: user_agent
+            user_agent: user_agent,
         }
     }
 
-    //fn get(&self, url: &str, params: &HashMap<&str, &str>) -> json::Result<json::JsonValue> {
-    fn get(&self, url: &str, params: &HashMap<&str, &str>) -> Result<String, hyper::Error> {
+    fn get(&self,
+           url: &str,
+           params: &HashMap<&str, &str>
+           ) -> Box<Future<Item = Response, Error = hyper::Error>> {
+
+        // TODO: add tls support
         // A bit dirty
-        let base_uri = match env::var("MBZ_URI") {
+        let base_uri = match env::var("MBZ_WS") {
             Ok(env_uri) => env_uri,
-            _ => String::from("https://musicbrainz.org/ws/2")
+            _ => String::from("https://musicbrainz.org/ws/2"),
         };
 
         let query_fmt = "fmt=json";
-        
+
         let mut endpoint = format!("{}/{}?{}", base_uri, url, query_fmt);
 
         for (param, val) in params {
-            endpoint = format!("{}&{}={}", endpoint, param, val);
+            endpoint = format!(
+                "{}&{}={}",
+                endpoint,
+                param,
+                utf8_percent_encode(val, DEFAULT_ENCODE_SET).to_string()
+            );
         }
 
-        println!("ENDPOINT {}", endpoint);
-
         let user_agent = self.user_agent.clone();
-        let mut req = hyper::Request::new(hyper::Method::Get, endpoint.parse()?);
-        req.headers_mut().set(hyper::header::UserAgent::new(user_agent));
+        let mut req = Request::new(hyper::Method::Get, endpoint.parse().unwrap());
+        req.headers_mut().set(
+            hyper::header::UserAgent::new(user_agent)
+        );
 
-        let mut buf = String::new();
+        //let body = self.client.request(req).and_then(|res| { res.body().concat2() });
+        let body = self.client.request(req);
 
-        let post = self.client.request(req).and_then(|res| {
-            println!("POST: {}", res.status()); 
-            res.body().concat2()
-        });
-    
-        //res.read_to_string(&mut buf).expect("failed to read response body to string");
-
-        println!("buf {}", buf);
-
-        Ok(buf)
+        Box::new(body)
     }
 
     pub fn artist(&self) -> entity::artist::Artist {
@@ -94,7 +99,6 @@ impl Bernard {
     pub fn release(&self) -> entity::release::Release {
         entity::release::Release::empty()
     }
-
 }
 
 pub mod enums;

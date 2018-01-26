@@ -1,6 +1,7 @@
 use error::Error;
 use uuid::Uuid;
 use std::collections::HashMap;
+use hyper;
 use futures::Future;
 
 pub trait Entity: Sized {
@@ -13,13 +14,26 @@ pub trait Entity: Sized {
     ///
     /// # Example
     ///
-    fn search(&self, client: &super::Bernard, params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error>;
+    fn search(
+        &self,
+        client: &super::Bernard,
+        params: &mut HashMap<&str, &str>,
+    ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>>;
 
     /// Performs a lookup of an entity by using its Bernard Identifier.
     ///
     /// # Example
     ///
-    fn lookup(&self, client: &super::Bernard, entity_id: &Uuid, params: &mut HashMap<&str, &str>) -> Result<Self, Error>;
-    
-    fn browse(&self, client: &super::Bernard, params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error>;
+    fn lookup(
+        &self,
+        client: &super::Bernard,
+        entity_id: &Uuid,
+        params: &mut HashMap<&str, &str>,
+    ) -> Box<Future<Item = Self, Error = hyper::Error>>;
+
+    fn browse(
+        &self,
+        client: &super::Bernard,
+        params: &mut HashMap<&str, &str>,
+    ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>>;
 }

@@ -9,7 +9,7 @@ pub enum Error {
     Get(hyper::Error),
     ParseJson(serde_json::Error),
     ParseUuid(uuid::ParseError),
-    AsSlice
+    AsSlice,
 }
 
 impl fmt::Display for Error {
@@ -31,7 +31,7 @@ impl error::Error for Error {
             Error::Get(ref err) => err.description(),
             Error::ParseJson(ref err) => err.description(),
             Error::ParseUuid(_) => "error parsing uuid",
-            Error::AsSlice => "error parsing as slice"
+            Error::AsSlice => "error parsing as slice",
         }
     }
 }

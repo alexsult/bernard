@@ -13,25 +13,22 @@ pub struct Media {
     pub format: Option<String>,
     pub format_id: Option<Uuid>,
     pub tracks: Option<Vec<Track>>,
-    pub track_offset: Option<i32>
+    pub track_offset: Option<i32>,
 }
 
 impl Media {
-    pub fn new(title: String,
-               position: i32,
-               track_count: i32,
-               discs: Vec<Disc>) -> Media {
-    
+    pub fn new(title: String, position: i32, track_count: i32, discs: Vec<Disc>) -> Media {
+
         let mut media = Media::empty();
-        
+
         media.title = title;
         media.position = position;
         media.track_count = track_count;
         media.discs = discs;
 
-        media 
+        media
     }
-        
+
     pub fn empty() -> Media {
         Media {
             title: String::new(),
@@ -41,11 +38,13 @@ impl Media {
             format: None,
             format_id: None,
             tracks: None,
-            track_offset: None
+            track_offset: None,
         }
     }
 }
 
 impl Default for Media {
-    fn default() -> Media { Media::empty() }
+    fn default() -> Media {
+        Media::empty()
+    }
 }

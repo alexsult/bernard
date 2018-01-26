@@ -1,4 +1,4 @@
-#![recursion_limit = "128"]
+#![recursion_limit = "256"]
 extern crate proc_macro;
 extern crate syn;
 #[macro_use]
@@ -44,7 +44,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
     let field_count = quote::Ident::from(format!("{}_count", endpoint));
 
     quote! {
-		#[derive(Debug, Clone, Serialize, Deserialize)]
+        #[derive(Debug, Clone, Serialize, Deserialize)]
         pub struct #struct_result_name {
             pub created: String,
             pub count: i32,
@@ -64,66 +64,74 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
             fn lookup(&self,
                        client: &super::super::Bernard,
                        entity_id: &Uuid,
-                       params: &mut HashMap<&str, &str>) -> Result<Self, Error> {
+                       params: &mut HashMap<&str, &str>
+                      ) -> Box<Future<Item = Self, Error = hyper::Error>> {
+    
+                let uri = &format!("{endpoint}/{id}",
+                                   endpoint=#endpoint,
+                                   id=entity_id);
 
-                let data = match client.get(&format!("{endpoint}/{id}", 
-                                                            endpoint=#endpoint,
-                                                            id=entity_id), 
-                                                   params) {
-                    Ok(x) => x,
-                    Err(e) => return Err(Error::Get(e)) 
-                };
-
-                let data_struct: #struct_name =
-                                  match serde_json::from_str(&data) {
+                let body = client.get(uri, params).and_then(|res| { 
+                    res.body().concat2()
+                });
                 
-                    Ok(x) => x,
-                    Err(e) => return Err(Error::ParseJson(e))
-                };
+                let data_struct = body.and_then(move |body| {
+                    let res: #struct_name = serde_json::from_slice(&body).map_err(|e| { 
+                        io::Error::new(
+                            io::ErrorKind::Other,
+                            e
+                        )
+                    }).unwrap(); 
+                    futures::future::ok(res) 
+                });
 
-                Ok(data_struct)
+                Box::new(data_struct)
             }
-           
-            fn search(&self, 
-                      client: &super::super::Bernard, 
-                      params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error> {
 
-                let data = match client.get(&format!("{endpoint}",
-                                                     endpoint=#endpoint),
-                                            params) {
-                    Ok(x) => x,
-                    Err(e) => return Err(Error::Get(e)) 
-                };
+            fn search(&self,
+                      client: &super::super::Bernard,
+                      params: &mut HashMap<&str, &str>
+                      ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
 
-                //let mut results: Vec<#struct_name> = Vec::new();
+                let body = client.get(#endpoint,
+                                      params).and_then(|res| { 
+                                            res.body().concat2() 
+                                      });
+    
+                let search_results = body.and_then(move |body| {
+                    let res: #struct_result_name = serde_json::from_slice(&body).map_err(|e| { 
+                        io::Error::new(
+                            io::ErrorKind::Other,
+                            e
+                        )
+                    }).unwrap(); 
+                    futures::future::ok(res.#field_result) 
+                });
 
-                let search_results: #struct_result_name = match serde_json::from_str(&data) {
-                    Ok(x) => x,
-                    Err(e) => return Err(Error::ParseJson(e))
-                };
-
-                Ok(search_results.#field_result )
+                Box::new(search_results)
             }
 
             fn browse(&self, 
-                      client: &super::super::Bernard, 
-                      params: &mut HashMap<&str, &str>) -> Result<Vec<Self>, Error> {
+                      client: &super::super::Bernard,
+                      params: &mut HashMap<&str, &str>
+                      ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
 
-                let data = match client.get(&format!("{endpoint}",
-                                                     endpoint=#endpoint),
-                                            params) {
-                    Ok(x) => x,
-                    Err(e) => return Err(Error::Get(e)) 
-                };
+                let body = client.get(#endpoint,
+                                      params).and_then(|res| { 
+                                            res.body().concat2() 
+                                      });
 
-                //let mut results: Vec<#struct_name> = Vec::new();
+                let search_results = body.and_then(move |body| {
+                    let res: #struct_browse_name = serde_json::from_slice(&body).map_err(|e| { 
+                        io::Error::new(
+                            io::ErrorKind::Other,
+                            e
+                        )
+                    }).unwrap(); 
+                    futures::future::ok(res.#field_result) 
+                });
 
-                let search_results: #struct_browse_name = match serde_json::from_str(&data) {
-                    Ok(x) => x,
-                    Err(e) => return Err(Error::ParseJson(e))
-                };
-
-                Ok(search_results.#field_result )
+                Box::new(search_results)
             }
         }
     }

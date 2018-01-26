@@ -1,3 +1,7 @@
+use std::io;
+use futures::{Future, Stream};
+use futures;
+use hyper;
 use uuid::Uuid;
 use error::Error;
 use std::collections::HashMap;
@@ -27,17 +31,16 @@ pub struct Area {
     pub rating: Option<i32>,
     pub relation_list: Option<Vec<Relations>>,
     pub tags: Option<Vec<Tag>>,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub area_type: Option<String>,
     #[serde(rename = "type-id")]
     pub artist_type_id: Option<Uuid>,
-    pub score: Option<String>
+    pub score: Option<String>,
 }
 
 impl Area {
-    pub fn new(name: String,
-               sort_name: String) -> Area { 
-    
+    pub fn new(name: String, sort_name: String) -> Area {
+
         let mut area = Area::empty();
 
         area.name = name;
@@ -47,7 +50,7 @@ impl Area {
     }
 
     pub fn empty() -> Area {
-        Area { 
+        Area {
             name: String::new(),
             sort_name: String::new(),
             disambiguation: None,
@@ -65,11 +68,13 @@ impl Area {
             tags: None,
             area_type: None,
             artist_type_id: None,
-            score: None
+            score: None,
         }
     }
 }
 
 impl Default for Area {
-    fn default() -> Area { Area::empty() }
+    fn default() -> Area {
+        Area::empty()
+    }
 }

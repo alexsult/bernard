@@ -1,3 +1,7 @@
+use std::io;
+use futures;
+use futures::{Future, Stream};
+use hyper;
 use serde_json;
 use uuid::Uuid;
 use traits::Entity;
@@ -12,10 +16,10 @@ pub struct Series {
     pub name: String,
     pub disambiguation: Option<String>,
     pub id: Option<Uuid>,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub series_type: Option<String>,
     pub series_type_id: Option<Uuid>,
-    pub relations: Option<Vec<Relation>>
+    pub relations: Option<Vec<Relation>>,
 }
 
 impl Series {
@@ -27,7 +31,7 @@ impl Series {
 
         series
     }
- 
+
     pub fn empty() -> Series {
         Series {
             name: String::from(""),
@@ -35,11 +39,13 @@ impl Series {
             id: None,
             series_type: None,
             series_type_id: None,
-            relations: None
+            relations: None,
         }
     }
 }
 
 impl Default for Series {
-    fn default() -> Series { Series::empty() }
+    fn default() -> Series {
+        Series::empty()
+    }
 }

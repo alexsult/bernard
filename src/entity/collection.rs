@@ -6,22 +6,24 @@ use traits::Entity;
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct Collection {
-    pub name : String,
+    pub name: String,
     pub editor: String,
     pub entity_type: String,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub collection_type: String,
-    #[serde(rename="type-id")]
+    #[serde(rename = "type-id")]
     pub collection_type_id: Uuid,
-    pub id: Option<Uuid>
+    pub id: Option<Uuid>,
 }
 
 impl Collection {
-    pub fn new(name: String,
-               editor: String,
-               entity_type: String,
-               collection_type: String,
-               collection_type_id: Uuid) -> Collection {
+    pub fn new(
+        name: String,
+        editor: String,
+        entity_type: String,
+        collection_type: String,
+        collection_type_id: Uuid,
+    ) -> Collection {
 
         let mut collection = Collection::empty();
 
@@ -35,17 +37,19 @@ impl Collection {
     }
 
     pub fn empty() -> Collection {
-        Collection {    
-            name : String::new(),
+        Collection {
+            name: String::new(),
             editor: String::new(),
             entity_type: String::new(),
             collection_type: String::new(),
             collection_type_id: Uuid::nil(),
-            id: None 
+            id: None,
         }
     }
 }
 
 impl Default for Collection {
-    fn default() -> Collection { Collection::empty() }
+    fn default() -> Collection {
+        Collection::empty()
+    }
 }

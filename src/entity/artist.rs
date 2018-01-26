@@ -1,3 +1,7 @@
+use std::io;
+use futures;
+use hyper;
+use futures::{Future, Stream};
 use uuid::Uuid;
 use std::fmt;
 use std::collections::HashMap;
@@ -41,22 +45,21 @@ pub struct Artist {
     pub rating: Option<i32>,
     pub relations: Option<Vec<Relation>>,
     pub tags: Option<Vec<Tag>>,
-	#[serde(rename = "type")]
+    #[serde(rename = "type")]
     pub artist_type: Option<PersonType>,
-	#[serde(rename = "type-id")]
+    #[serde(rename = "type-id")]
     pub artist_type_id: Option<Uuid>,
-    pub score: Option<u8>
+    pub score: Option<u8>,
 }
 
 impl Artist {
-    pub fn new(name: String, 
-               sort_name: String) -> Artist {
+    pub fn new(name: String, sort_name: String) -> Artist {
 
         let mut artist = Artist::empty();
-        
+
         artist.name = name;
         artist.sort_name = sort_name;
-        
+
         artist
     }
 
@@ -86,13 +89,15 @@ impl Artist {
             tags: None,
             artist_type: None,
             artist_type_id: None,
-            score: None
+            score: None,
         }
     }
 }
 
 impl Default for Artist {
-    fn default() -> Artist { Artist::empty() }
+    fn default() -> Artist {
+        Artist::empty()
+    }
 }
 
 impl PartialEq for Artist {
@@ -110,7 +115,7 @@ impl PartialEq for Artist {
 
 impl fmt::Display for Artist {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f,"{name}", name = self.name)
+        writeln!(f, "{name}", name = self.name)
     }
 }
 
@@ -120,32 +125,31 @@ pub struct ArtistCredit {
     pub name: String,
     pub sort_name: String,
     pub joinphrase: String,
-    pub artist: Artist
+    pub artist: Artist,
 }
 
 impl ArtistCredit {
-    pub fn new(name: String, 
-               sort_name: String,
-               joinphrase: String, 
-               artist: Artist) -> ArtistCredit {
+    pub fn new(
+        name: String,
+        sort_name: String,
+        joinphrase: String,
+        artist: Artist,
+    ) -> ArtistCredit {
         ArtistCredit {
             name: name,
             sort_name: sort_name,
             joinphrase: joinphrase,
-            artist: artist
+            artist: artist,
         }
     }
 
     pub fn empty() -> ArtistCredit {
-        ArtistCredit::new(
-            String::new(),
-            String::new(),
-            String::new(),
-            Artist::empty()
-        )
+        ArtistCredit::new(String::new(), String::new(), String::new(), Artist::empty())
     }
 }
 
 impl Default for ArtistCredit {
-    fn default() -> ArtistCredit { ArtistCredit::empty() }
+    fn default() -> ArtistCredit {
+        ArtistCredit::empty()
+    }
 }

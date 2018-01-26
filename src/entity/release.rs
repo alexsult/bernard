@@ -1,3 +1,7 @@
+use std::io;
+use futures;
+use futures::{Future, Stream};
+use hyper;
 use text_representation::TextRepresentation;
 use std::collections::HashMap;
 use traits::Entity;
@@ -19,11 +23,11 @@ use entity::release_group::ReleaseGroup;
 pub struct ReleaseEvent {
     pub area: Option<Area>,
     pub country: Option<String>,
-    pub date: String
+    pub date: String,
 }
 
 impl ReleaseEvent {
-    pub fn new(date: String) -> ReleaseEvent{ 
+    pub fn new(date: String) -> ReleaseEvent {
         let mut realease_event = ReleaseEvent::empty();
         realease_event.date = date;
         realease_event
@@ -33,13 +37,15 @@ impl ReleaseEvent {
         ReleaseEvent {
             area: None,
             country: None,
-            date: String::from("")
+            date: String::from(""),
         }
     }
 }
 
 impl Default for ReleaseEvent {
-    fn default() -> ReleaseEvent { ReleaseEvent::empty() }
+    fn default() -> ReleaseEvent {
+        ReleaseEvent::empty()
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
@@ -53,7 +59,7 @@ pub struct Release {
     pub text_representation: TextRepresentation,
     pub disambiguation: Option<String>,
     pub realease_events: Option<Vec<ReleaseEvent>>,
-    pub asin: Option<String>, 
+    pub asin: Option<String>,
     pub status: Option<String>,
     pub status_id: Option<Uuid>,
     pub packaging: Option<Packaging>,
@@ -72,13 +78,11 @@ pub struct Release {
     pub language: Option<String>,
     pub script: Option<String>,
     pub annotation: Option<String>,
-    pub score: Option<u8>
+    pub score: Option<String>,
 }
 
 impl Release {
-    pub fn new(title: String,
-               barcode: String,
-               text_representation: TextRepresentation) -> Release {
+    pub fn new(title: String, barcode: String, text_representation: TextRepresentation) -> Release {
 
         let mut release = Release::empty();
 
@@ -98,7 +102,7 @@ impl Release {
             text_representation: TextRepresentation::empty(),
             disambiguation: None,
             realease_events: None,
-            asin: None, 
+            asin: None,
             status: None,
             status_id: None,
             packaging: None,
@@ -117,11 +121,13 @@ impl Release {
             language: None,
             script: None,
             annotation: None,
-            score: None
+            score: None,
         }
     }
 }
 
 impl Default for Release {
-    fn default() -> Release { Release::empty() }
+    fn default() -> Release {
+        Release::empty()
+    }
 }

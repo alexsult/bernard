@@ -1,3 +1,7 @@
+use std::io;
+use hyper;
+use futures;
+use futures::{Future, Stream};
 use uuid::Uuid;
 use error::Error;
 use std::collections::HashMap;
@@ -16,17 +20,16 @@ pub struct Event {
     pub time: Option<String>,
     pub setlist: Option<String>,
     pub id: Option<Uuid>,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub event_type: Option<String>,
-    #[serde(rename="type-id")]
+    #[serde(rename = "type-id")]
     pub event_type_id: Option<String>,
     pub life_span: Option<LifeSpan>,
-    pub relations: Option<Vec<Relation>>
+    pub relations: Option<Vec<Relation>>,
 }
 
 impl Event {
-    pub fn new(name: String,
-               canceled: bool) -> Event {
+    pub fn new(name: String, canceled: bool) -> Event {
 
         let mut event = Event::empty();
 
@@ -47,11 +50,13 @@ impl Event {
             event_type: None,
             event_type_id: None,
             life_span: None,
-            relations: None
+            relations: None,
         }
     }
 }
 
 impl Default for Event {
-    fn default() -> Event { Event::empty() }
+    fn default() -> Event {
+        Event::empty()
+    }
 }

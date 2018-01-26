@@ -19,9 +19,9 @@ use enums::Direction;
 #[serde(default)]
 pub struct Relation {
     pub direction: Direction,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub relation_type: String,
-    #[serde(rename="type-id")]
+    #[serde(rename = "type-id")]
     pub relation_type_id: Option<Uuid>,
     pub area: Option<Area>,
     pub artist: Option<Artist>,
@@ -39,18 +39,17 @@ pub struct Relation {
     pub end: Option<String>,
     pub ended: Option<bool>,
     pub target_credit: Option<String>,
-    pub ordering_key: Option<i32>
+    pub ordering_key: Option<i32>,
 }
 
 impl Relation {
-    pub fn new(direction: Direction,
-               relation_type: String) -> Relation {
-        
+    pub fn new(direction: Direction, relation_type: String) -> Relation {
+
         let mut relation = Relation::empty();
 
         relation.direction = direction;
         relation.relation_type = relation_type;
-        
+
         relation
     }
 
@@ -75,35 +74,35 @@ impl Relation {
             end: None,
             ended: None,
             target_credit: None,
-            ordering_key: None 
+            ordering_key: None,
         }
     }
 }
 
 impl Default for Relation {
-    fn default() -> Relation { Relation::empty() }
+    fn default() -> Relation {
+        Relation::empty()
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Relations {
-    pub relations: Vec<Relation>
+    pub relations: Vec<Relation>,
 }
 
 impl Relations {
     pub fn new(relations: Vec<Relation>) -> Relations {
-        Relations {
-            relations: relations
-        }
+        Relations { relations: relations }
     }
 
     pub fn empty() -> Relations {
-        Relations::new(
-            Vec::new()
-        )
+        Relations::new(Vec::new())
     }
 }
 
 impl Default for Relations {
-    fn default() -> Relations { Relations::empty() }
+    fn default() -> Relations {
+        Relations::empty()
+    }
 }

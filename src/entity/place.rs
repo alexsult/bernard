@@ -1,3 +1,7 @@
+use std::io;
+use futures;
+use futures::{Future, Stream};
+use hyper;
 use uuid::Uuid;
 use entity::area::Area;
 use entity::life_span::LifeSpan;
@@ -18,15 +22,14 @@ pub struct Place {
     pub id: Option<Uuid>,
     pub place_type: Option<String>,
     pub score: Option<String>,
-    pub life_span: Option<LifeSpan>
+    pub life_span: Option<LifeSpan>,
 }
 
 impl Place {
-    pub fn new(name: String,
-               address: String) -> Place {
+    pub fn new(name: String, address: String) -> Place {
 
         let mut place = Place::empty();
-    
+
         place.name = name;
         place.address = address;
 
@@ -35,7 +38,7 @@ impl Place {
 
 
     pub fn empty() -> Place {
-        Place{
+        Place {
             name: String::new(),
             address: String::new(),
             disambiguation: None,
@@ -44,38 +47,38 @@ impl Place {
             id: None,
             place_type: None,
             score: None,
-            life_span: None
+            life_span: None,
         }
     }
 }
 
 impl Default for Place {
-    fn default() -> Place { Place::empty() }
+    fn default() -> Place {
+        Place::empty()
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Coordinates {
     pub latitude: Option<String>,
-    pub longitude: Option<String>
+    pub longitude: Option<String>,
 }
 
 impl Coordinates {
-    pub fn new(latitude: Option<String>,
-               longitude: Option<String>) -> Coordinates {
-        Coordinates{
+    pub fn new(latitude: Option<String>, longitude: Option<String>) -> Coordinates {
+        Coordinates {
             latitude: latitude,
-            longitude: longitude
+            longitude: longitude,
         }
     }
 
     pub fn empty() -> Coordinates {
-        Coordinates::new(
-            None,
-            None
-        )
+        Coordinates::new(None, None)
     }
 }
 
 impl Default for Coordinates {
-    fn default() -> Coordinates { Coordinates::empty() }
+    fn default() -> Coordinates {
+        Coordinates::empty()
+    }
 }

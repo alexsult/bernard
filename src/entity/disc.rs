@@ -8,14 +8,11 @@ pub struct Disc {
     pub offset_count: i32,
     pub offsets: Vec<i32>,
     pub id: Option<String>,
-    pub releases: Option<Vec<Release>>
+    pub releases: Option<Vec<Release>>,
 }
 
 impl Disc {
-    pub fn new(
-        sectors: i32,
-        offset_count: i32,
-        offsets: Vec<i32>) -> Disc {
+    pub fn new(sectors: i32, offset_count: i32, offsets: Vec<i32>) -> Disc {
 
         let mut disc = Disc::empty();
 
@@ -32,11 +29,13 @@ impl Disc {
             offset_count: 0,
             offsets: Vec::new(),
             id: None,
-            releases: None
+            releases: None,
         }
     }
 }
 
 impl Default for Disc {
-    fn default() -> Disc { Disc::empty() }
+    fn default() -> Disc {
+        Disc::empty()
+    }
 }

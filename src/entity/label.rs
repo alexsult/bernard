@@ -3,7 +3,7 @@ use entity::life_span::LifeSpan;
 use entity::release::Release;
 use entity::area::Area;
 
-#[derive(Debug, Clone, Serialize, Deserialize)] 
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct Label {
@@ -19,13 +19,12 @@ pub struct Label {
     pub label_type: Option<String>,
     pub type_id: Option<Uuid>,
     pub country: Option<String>,
-    pub releases: Option<Vec<Release>>
+    pub releases: Option<Vec<Release>>,
 }
 
 impl Label {
-    pub fn new(name: String,
-           sort_name: String) -> Label {
-        
+    pub fn new(name: String, sort_name: String) -> Label {
+
         let mut label = Label::empty();
 
         label.name = name;
@@ -48,39 +47,40 @@ impl Label {
             label_type: None,
             type_id: None,
             country: None,
-            releases: None
+            releases: None,
         }
     }
 }
 
 impl Default for Label {
-    fn default() -> Label { Label::empty() }
+    fn default() -> Label {
+        Label::empty()
+    }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)] 
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct LabelInfo {
     pub catalog_number: Option<String>,
-    pub label: Label
+    pub label: Label,
 }
 
 impl LabelInfo {
-    pub fn new(catalog_number: Option<String>, label: Label) -> LabelInfo{
+    pub fn new(catalog_number: Option<String>, label: Label) -> LabelInfo {
         LabelInfo {
             catalog_number: catalog_number,
-            label: label
+            label: label,
         }
     }
 
     pub fn empty() -> LabelInfo {
-        LabelInfo::new(
-            None,
-            Label::empty()
-        )
+        LabelInfo::new(None, Label::empty())
     }
 }
 
 impl Default for LabelInfo {
-    fn default() -> LabelInfo { LabelInfo::empty() }
+    fn default() -> LabelInfo {
+        LabelInfo::empty()
+    }
 }

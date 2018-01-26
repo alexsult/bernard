@@ -6,16 +6,18 @@ pub struct CoverArtArchive {
     pub front: bool,
     pub darkened: bool,
     pub count: i32,
-    pub artwork: bool
+    pub artwork: bool,
 }
 
 impl CoverArtArchive {
-    pub fn new(back: bool, 
-               front: bool, 
-               darkened: bool, 
-               count: i32, 
-               artwork: bool) -> CoverArtArchive {
- 
+    pub fn new(
+        back: bool,
+        front: bool,
+        darkened: bool,
+        count: i32,
+        artwork: bool,
+    ) -> CoverArtArchive {
+
         let mut cover_art_archive = CoverArtArchive::empty();
 
         cover_art_archive.back = back;
@@ -33,11 +35,13 @@ impl CoverArtArchive {
             front: false,
             darkened: false,
             count: 0,
-            artwork: false
+            artwork: false,
         }
     }
 }
 
 impl Default for CoverArtArchive {
-    fn default() -> CoverArtArchive { CoverArtArchive::empty() }
+    fn default() -> CoverArtArchive {
+        CoverArtArchive::empty()
+    }
 }

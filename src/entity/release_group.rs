@@ -1,3 +1,7 @@
+use std::io;
+use futures;
+use futures::{Future, Stream};
+use hyper;
 use uuid::Uuid;
 use enums::*;
 use std::collections::HashMap;
@@ -20,16 +24,14 @@ pub struct ReleaseGroup {
     pub first_release_date: Option<String>,
     pub id: Option<Uuid>,
     pub artist_credit: Option<Vec<ArtistCredit>>,
-    pub releases: Option<Vec<Release>>
+    pub releases: Option<Vec<Release>>,
 }
 
 impl ReleaseGroup {
-    pub fn new(title: String,
-               primary_type: AlbumType,
-               primary_type_id: Uuid) -> ReleaseGroup {
+    pub fn new(title: String, primary_type: AlbumType, primary_type_id: Uuid) -> ReleaseGroup {
 
         let mut release_group = ReleaseGroup::empty();
-        
+
         release_group.title = title;
         release_group.primary_type = primary_type;
         release_group.primary_type_id = primary_type_id;
@@ -47,13 +49,15 @@ impl ReleaseGroup {
             first_release_date: None,
             id: None,
             artist_credit: None,
-            releases: None
+            releases: None,
         }
     }
 }
 
 impl Default for ReleaseGroup {
-    fn default() -> ReleaseGroup { ReleaseGroup::empty() }
+    fn default() -> ReleaseGroup {
+        ReleaseGroup::empty()
+    }
 }
 
 impl PartialEq for ReleaseGroup {
@@ -67,7 +71,11 @@ impl PartialEq for ReleaseGroup {
 
 impl fmt::Display for ReleaseGroup {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "{title} {primary}", title=self.title,
-                                         primary=self.primary_type)
+        writeln!(
+            f,
+            "{title} {primary}",
+            title = self.title,
+            primary = self.primary_type
+        )
     }
 }

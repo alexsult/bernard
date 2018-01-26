@@ -1,3 +1,7 @@
+use std::io;
+use futures;
+use futures::{Future, Stream};
+use hyper;
 use serde_json;
 use uuid::Uuid;
 use traits::Entity;
@@ -17,11 +21,11 @@ pub struct Work {
     pub attributes: Option<Vec<String>>,
     pub language: Option<String>,
     pub id: Option<Uuid>,
-    #[serde(rename="type")]
+    #[serde(rename = "type")]
     pub work_type: Option<String>,
     pub artist_credit: Option<ArtistCredit>,
     pub relations: Option<Vec<Relation>>,
-    pub tags: Option<Vec<Tag>>
+    pub tags: Option<Vec<Tag>>,
 }
 
 impl Work {
@@ -45,11 +49,13 @@ impl Work {
             work_type: None,
             artist_credit: None,
             relations: None,
-            tags: None
+            tags: None,
         }
     }
 }
 
 impl Default for Work {
-    fn default() -> Work { Work::empty() } 
+    fn default() -> Work {
+        Work::empty()
+    }
 }

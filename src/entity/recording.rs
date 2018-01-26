@@ -6,19 +6,17 @@ use uuid::Uuid;
 #[serde(default)]
 pub struct Recording {
     pub title: String,
-    pub length:  i32,
+    pub length: i32,
     pub video: bool,
     pub disambiguation: Option<String>,
     pub artist_credit: Option<ArtistCredit>,
     pub isrcs: Option<Vec<String>>,
-    pub id: Option<Uuid>
+    pub id: Option<Uuid>,
 }
 
 impl Recording {
-    pub fn new(title: String,
-               length: i32,
-               video: bool) -> Recording {
-        
+    pub fn new(title: String, length: i32, video: bool) -> Recording {
+
         let mut recording = Recording::empty();
 
         recording.title = title;
@@ -31,16 +29,18 @@ impl Recording {
     pub fn empty() -> Recording {
         Recording {
             title: String::new(),
-            length:  0,
+            length: 0,
             video: false,
             disambiguation: None,
             artist_credit: None,
             isrcs: None,
-            id: None
+            id: None,
         }
     }
 }
 
 impl Default for Recording {
-    fn default() -> Recording { Recording::empty() }
+    fn default() -> Recording {
+        Recording::empty()
+    }
 }

@@ -3,25 +3,24 @@
 #[serde(default)]
 pub struct TextRepresentation {
     pub script: Option<String>,
-    pub language: Option<String>
+    pub language: Option<String>,
 }
 
 impl TextRepresentation {
     pub fn new(script: Option<String>, language: Option<String>) -> TextRepresentation {
-        TextRepresentation{
+        TextRepresentation {
             script: script,
-            language: language
+            language: language,
         }
     }
 
     pub fn empty() -> TextRepresentation {
-        TextRepresentation::new(
-            None,
-            None
-        )
+        TextRepresentation::new(None, None)
     }
 }
 
 impl Default for TextRepresentation {
-    fn default() -> TextRepresentation { TextRepresentation::empty() }
+    fn default() -> TextRepresentation {
+        TextRepresentation::empty()
+    }
 }

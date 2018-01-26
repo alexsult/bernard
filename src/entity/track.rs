@@ -11,14 +11,12 @@ pub struct Track {
     pub number: i32,
     pub id: Option<Uuid>,
     pub recording: Option<Recording>,
-    pub artist_credit: Option<ArtistCredit>
+    pub artist_credit: Option<ArtistCredit>,
 }
 
 impl Track {
-    pub fn new(title: String,
-               length: i32,
-               number: i32) -> Track {
-        
+    pub fn new(title: String, length: i32, number: i32) -> Track {
+
         let mut track = Track::empty();
 
         track.title = title;
@@ -32,14 +30,16 @@ impl Track {
         Track {
             title: String::new(),
             length: 0,
-            number: 0, 
+            number: 0,
             id: None,
             recording: None,
-            artist_credit: None
+            artist_credit: None,
         }
     }
 }
 
 impl Default for Track {
-    fn default() -> Track { Track::empty() }
+    fn default() -> Track {
+        Track::empty()
+    }
 }
