@@ -5,7 +5,6 @@ use hyper;
 use uuid::Uuid;
 use entity::area::Area;
 use entity::life_span::LifeSpan;
-use error::Error;
 use serde_json;
 use traits::Entity;
 use std::collections::HashMap;

@@ -5,7 +5,6 @@ use hyper;
 use serde_json;
 use uuid::Uuid;
 use traits::Entity;
-use error::Error;
 use std::collections::HashMap;
 use entity::relation::Relation;
 

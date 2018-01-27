@@ -20,7 +20,6 @@ def root():
 
 @app.route('/<path:other>')
 def other(other):
-    print("Q {}".format(request.query_string));
     url = "https://{}/{}{}".format(HOST_TO_REQUEST, other,
                                    ("?{}".format(
                                        request.query_string.decode('utf-8'))
@@ -28,6 +27,7 @@ def other(other):
     hashed_url = hashlib.sha224(url.encode('utf-8')).hexdigest()
     rv = CACHE.get(hashed_url)
     if rv is None:
+        print("MISS")
         req = requests.get(url)
         CACHE.set(hashed_url, req.content)
         return req.content

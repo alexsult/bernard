@@ -7,7 +7,7 @@ fn test_alias_instantation() {
         String::from("Los Beatles"),
         String::from("Los Beatles"),
     );
-    
+
     a.locale = Some(String::from("es"));
 
     assert_eq!(a.name, String::from("Los Beatles"));

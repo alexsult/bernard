@@ -66,23 +66,23 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                        entity_id: &Uuid,
                        params: &mut HashMap<&str, &str>
                       ) -> Box<Future<Item = Self, Error = hyper::Error>> {
-    
+
                 let uri = &format!("{endpoint}/{id}",
                                    endpoint=#endpoint,
                                    id=entity_id);
 
-                let body = client.get(uri, params).and_then(|res| { 
+                let body = client.get(uri, params).and_then(|res| {
                     res.body().concat2()
                 });
-                
+
                 let data_struct = body.and_then(move |body| {
-                    let res: #struct_name = serde_json::from_slice(&body).map_err(|e| { 
+                    let res: #struct_name = serde_json::from_slice(&body).map_err(|e| {
                         io::Error::new(
                             io::ErrorKind::Other,
                             e
                         )
-                    }).unwrap(); 
-                    futures::future::ok(res) 
+                    }).unwrap();
+                    futures::future::ok(res)
                 });
 
                 Box::new(data_struct)
@@ -97,7 +97,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                                       params).and_then(|res| { 
                                             res.body().concat2() 
                                       });
-    
+
                 let search_results = body.and_then(move |body| {
                     let res: #struct_result_name = serde_json::from_slice(&body).map_err(|e| { 
                         io::Error::new(

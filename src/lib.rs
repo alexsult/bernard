@@ -17,7 +17,7 @@ use error::Error;
 use futures::Future;
 use tokio_core::reactor::Core;
 use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use hyper::{Request, Body, Response};
+use hyper::{Request, Response};
 
 #[derive(Debug)]
 pub struct Bernard {
@@ -72,11 +72,14 @@ impl Bernard {
         let mut endpoint = format!("{}/{}?{}", base_uri, url, query_fmt);
 
         for (param, val) in params {
+            // We add the params to the URL and replace spaces and other 
+            // characters with their ascii code
+            // We do this "by hand" for the ampsersand
             endpoint = format!(
                 "{}&{}={}",
                 endpoint,
                 param,
-                utf8_percent_encode(val, DEFAULT_ENCODE_SET).to_string()
+                utf8_percent_encode(val.replace("&", "26").as_str(), DEFAULT_ENCODE_SET).to_string()
             );
         }
 
@@ -86,10 +89,9 @@ impl Bernard {
             hyper::header::UserAgent::new(user_agent)
         );
 
-        //let body = self.client.request(req).and_then(|res| { res.body().concat2() });
-        let body = self.client.request(req);
+        let response = self.client.request(req);
 
-        Box::new(body)
+        Box::new(response)
     }
 
     pub fn artist(&self) -> entity::artist::Artist {

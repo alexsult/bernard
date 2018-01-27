@@ -5,7 +5,6 @@ use hyper;
 use text_representation::TextRepresentation;
 use std::collections::HashMap;
 use traits::Entity;
-use error::Error;
 use uuid::Uuid;
 use enums::*;
 use serde_json;

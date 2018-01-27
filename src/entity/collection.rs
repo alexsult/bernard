@@ -1,6 +1,4 @@
 use uuid::Uuid;
-use serde_json;
-use traits::Entity;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

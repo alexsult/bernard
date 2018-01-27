@@ -6,7 +6,6 @@ use uuid::Uuid;
 use std::fmt;
 use std::collections::HashMap;
 use traits::Entity;
-use error::Error;
 use serde_json;
 use enums::PersonType;
 use entity::alias::Alias;

@@ -7,7 +7,6 @@ use enums::*;
 use std::collections::HashMap;
 use std::fmt;
 use traits::Entity;
-use error::Error;
 use serde_json;
 use entity::artist::ArtistCredit;
 use entity::release::Release;

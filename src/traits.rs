@@ -1,4 +1,3 @@
-use error::Error;
 use uuid::Uuid;
 use std::collections::HashMap;
 use hyper;

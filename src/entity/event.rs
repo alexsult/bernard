@@ -3,7 +3,6 @@ use hyper;
 use futures;
 use futures::{Future, Stream};
 use uuid::Uuid;
-use error::Error;
 use std::collections::HashMap;
 use serde_json;
 use traits::Entity;
