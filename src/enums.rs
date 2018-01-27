@@ -243,6 +243,7 @@ impl fmt::Display for Packaging {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "kebab-case")]
 pub enum Quality {
     Low,
     Normal,

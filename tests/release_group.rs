@@ -52,7 +52,7 @@ fn test_release_group_neq_panic() {
     
     a.id = Some(Uuid::parse_str("c5bc370b-95c2-3634-bb89-51bb2dce97c3").unwrap());
     
-    let mut b = entity::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
+    let b = entity::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
                                                          enums::AlbumType::Album,
                                                          Uuid::parse_str("f529b476-6e62-324f-b0aa-1f3e33d313fc").unwrap());
     

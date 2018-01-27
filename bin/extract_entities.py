@@ -34,12 +34,6 @@ def save_data(entity_name, json_data):
 def get_entities(json_data, entity_name, index, subindex):
     if isinstance(json_data, dict):
         if entity_name is not None:
-            """
-            print("{} {} {} {}".format(re.sub(r"s$","",entity_name),
-                                    index,
-                                    subindex,
-                                    json.dumps(json_data)))
-            """
             save_data(entity_name, json_data)
         for k in json_data.keys():
             get_entities(json_data[k], k, index, subindex + 1)

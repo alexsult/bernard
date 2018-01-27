@@ -3,7 +3,7 @@ use bernard::*;
 
 #[test]
 fn test_recording_instantation() {
-    let mut a = entity::recording::Recording::new(String::from("Darling Be There"),
+    let a = entity::recording::Recording::new(String::from("Darling Be There"),
                                                   226133,
                                                   false);
 

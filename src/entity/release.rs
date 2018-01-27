@@ -52,10 +52,10 @@ impl Default for ReleaseEvent {
 #[serde(default)]
 pub struct Release {
     pub title: String,
-    pub barcode: String,
     pub quality: Quality,
     pub cover_art_archive: CoverArtArchive,
     pub text_representation: TextRepresentation,
+    pub barcode: Option<String>,
     pub disambiguation: Option<String>,
     pub realease_events: Option<Vec<ReleaseEvent>>,
     pub asin: Option<String>,
@@ -81,12 +81,11 @@ pub struct Release {
 }
 
 impl Release {
-    pub fn new(title: String, barcode: String, text_representation: TextRepresentation) -> Release {
+    pub fn new(title: String, text_representation: TextRepresentation) -> Release {
 
         let mut release = Release::empty();
 
         release.title = title;
-        release.barcode = barcode;
         release.text_representation = text_representation;
 
         release
@@ -95,10 +94,10 @@ impl Release {
     pub fn empty() -> Release {
         Release {
             title: String::new(),
-            barcode: String::new(),
             quality: Quality::Low,
             cover_art_archive: CoverArtArchive::empty(),
             text_representation: TextRepresentation::empty(),
+            barcode: None,
             disambiguation: None,
             realease_events: None,
             asin: None,
