@@ -8,14 +8,14 @@ use uuid::Uuid;
 pub struct Track {
     pub title: String,
     pub length: i32,
-    pub number: i32,
+    pub number: String,
     pub id: Option<Uuid>,
     pub recording: Option<Recording>,
     pub artist_credit: Option<ArtistCredit>,
 }
 
 impl Track {
-    pub fn new(title: String, length: i32, number: i32) -> Track {
+    pub fn new(title: String, length: i32, number: String) -> Track {
 
         let mut track = Track::empty();
 
@@ -30,7 +30,7 @@ impl Track {
         Track {
             title: String::new(),
             length: 0,
-            number: 0,
+            number: String::new(),
             id: None,
             recording: None,
             artist_credit: None,

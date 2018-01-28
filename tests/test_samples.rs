@@ -110,3 +110,56 @@ fn test_samples_text_reprensentation() {
     }
 }
 
+#[test]
+fn test_samples_media() {
+    let entity_name = "media".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::media::Media = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}
+
+#[test]
+fn test_samples_recording() {
+    let entity_name = "recording".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::recording::Recording = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}
+
+#[test]
+fn test_samples_track() {
+    let entity_name = "track".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::track::Track = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}

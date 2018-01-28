@@ -14,6 +14,7 @@ pub struct Media {
     pub format_id: Option<Uuid>,
     pub tracks: Option<Vec<Track>>,
     pub track_offset: Option<i32>,
+    pub number: Option<String>,
 }
 
 impl Media {
@@ -39,6 +40,7 @@ impl Media {
             format_id: None,
             tracks: None,
             track_offset: None,
+            number: None,
         }
     }
 }
