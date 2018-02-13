@@ -7,20 +7,20 @@ use uuid::Uuid;
 #[serde(default)]
 pub struct Track {
     pub title: String,
-    pub length: i32,
     pub number: String,
+    pub position: i32,
+    pub length: Option<i32>,
     pub id: Option<Uuid>,
     pub recording: Option<Recording>,
     pub artist_credit: Option<ArtistCredit>,
 }
 
 impl Track {
-    pub fn new(title: String, length: i32, number: String) -> Track {
+    pub fn new(title: String, number: String) -> Track {
 
         let mut track = Track::empty();
 
         track.title = title;
-        track.length = length;
         track.number = number;
 
         track
@@ -29,8 +29,9 @@ impl Track {
     pub fn empty() -> Track {
         Track {
             title: String::new(),
-            length: 0,
             number: String::new(),
+            position: 0,
+            length: None,
             id: None,
             recording: None,
             artist_credit: None,

@@ -5,6 +5,7 @@ extern crate serde;
 extern crate futures;
 extern crate tokio_core;
 extern crate percent_encoding;
+extern crate regex;
 
 #[macro_use]
 extern crate serde_derive;
@@ -41,8 +42,7 @@ impl Bernard {
     /// # Example
     ///
     pub fn new(core: &Core) -> Bernard {
-        let user_agent = format!(
-            "{name}/{version} ( {homepage} )",
+        let user_agent = format!("{name}/{version} ( {homepage} )",
             name = env!("CARGO_PKG_NAME"),
             version = env!("CARGO_PKG_VERSION"),
             homepage = env!("CARGO_PKG_HOMEPAGE")
@@ -75,11 +75,15 @@ impl Bernard {
             // We add the params to the URL and replace spaces and other 
             // characters with their ascii code
             // We do this "by hand" for the ampsersand
+            let mut pre_encoded_val: String = val.replace("&", "%26");
+            pre_encoded_val = regex::escape(pre_encoded_val.as_str());
+            pre_encoded_val = pre_encoded_val.replace("!", "");
+
             endpoint = format!(
                 "{}&{}={}",
                 endpoint,
                 param,
-                utf8_percent_encode(val.replace("&", "26").as_str(), DEFAULT_ENCODE_SET).to_string()
+                utf8_percent_encode(pre_encoded_val.as_str(), DEFAULT_ENCODE_SET).to_string()
             );
         }
 
@@ -98,9 +102,18 @@ impl Bernard {
         entity::artist::Artist::empty()
     }
 
+    pub fn recording(&self) -> entity::recording::Recording {
+        entity::recording::Recording::empty()
+    }
+
     pub fn release(&self) -> entity::release::Release {
         entity::release::Release::empty()
     }
+
+    pub fn release_group(&self) -> entity::release_group::ReleaseGroup {
+        entity::release_group::ReleaseGroup::empty()
+    }
+
 }
 
 pub mod enums;

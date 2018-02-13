@@ -24,6 +24,7 @@ pub struct ReleaseGroup {
     pub id: Option<Uuid>,
     pub artist_credit: Option<Vec<ArtistCredit>>,
     pub releases: Option<Vec<Release>>,
+    pub score: Option<String>,
 }
 
 impl ReleaseGroup {
@@ -49,6 +50,7 @@ impl ReleaseGroup {
             id: None,
             artist_credit: None,
             releases: None,
+            score: None,
         }
     }
 }

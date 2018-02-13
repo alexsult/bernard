@@ -75,6 +75,43 @@ fn test_samples_release() {
 }
 
 #[test]
+fn test_samples_tag() {
+    let entity_name = "tag".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::tag::Tag = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}
+
+#[test]
+fn test_samples_release_group() {
+    let entity_name = "realease-group".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::release_group::ReleaseGroup = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}
+
+
+#[test]
 fn test_samples_release_event() {
     let entity_name = "realease(event".to_owned();
     let samples_dir = match get_samples_dir(entity_name.as_str()) {
@@ -161,5 +198,41 @@ fn test_samples_track() {
             .expect("something went wrong reading the file");
 
         let _res: entity::track::Track = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}
+
+#[test]
+fn test_samples_alias() {
+    let entity_name = "alias".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::alias::Alias = serde_json::from_str(contents.as_str()).unwrap();
+    }
+}
+
+#[test]
+fn test_samples_artist_credit() {
+    let entity_name = "artist-credit".to_owned();
+    let samples_dir = match get_samples_dir(entity_name.as_str()) {
+        Ok(path) => path,
+        _ => return
+    };
+
+    for sample_file in read_dir(samples_dir).unwrap() {
+        let mut f = File::open(sample_file.unwrap().path()).expect("file not found");
+        let mut contents = String::new();
+        f.read_to_string(&mut contents)
+            .expect("something went wrong reading the file");
+
+        let _res: entity::artist::ArtistCredit = serde_json::from_str(contents.as_str()).unwrap();
     }
 }

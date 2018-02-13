@@ -71,6 +71,7 @@ pub enum AlbumType {
     #[serde(rename = "Mixtape/Street")]
     MixtapeStreet,
     Other,
+    Demo,
 }
 
 impl Default for AlbumType {
@@ -98,6 +99,7 @@ impl FromStr for AlbumType {
             "DJ-mix" => Ok(AlbumType::DjMix),
             "Mixtape/Street" => Ok(AlbumType::MixtapeStreet),
             "Other" => Ok(AlbumType::Other),
+            "Demo" => Ok(AlbumType::Demo),
             _ => Err(()),
         }
     }
@@ -120,6 +122,7 @@ impl fmt::Display for AlbumType {
             AlbumType::DjMix => write!(f, "DJ-mix"),
             AlbumType::MixtapeStreet => write!(f, "Mixtape/Street"),
             AlbumType::Other => write!(f, "Other"),
+            AlbumType::Demo => write!(f, "Demo"),
         }
     }
 }

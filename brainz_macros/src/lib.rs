@@ -3,8 +3,10 @@ extern crate proc_macro;
 extern crate syn;
 #[macro_use]
 extern crate quote;
+extern crate inflector;
 
 use proc_macro::TokenStream;
+use inflector::Inflector;
 
 // copied pasted from:
 // https://doc.rust-lang.org/beta/book/procedural-macros.html
@@ -12,13 +14,13 @@ use proc_macro::TokenStream;
 pub fn entity(input: TokenStream) -> TokenStream {
     // Construct a string representation of the type definition
     let s = input.to_string();
-    
+
     // Parse the string representation
     let ast = syn::parse_macro_input(&s).unwrap();
 
     // Build the impl
     let gen = impl_entity(&ast);
-    
+
     // Return the generated impl
     gen.parse().unwrap()
 }
@@ -27,24 +29,25 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
     let struct_name = &ast.ident;
     let struct_result_name = quote::Ident::from(format!("{}SearchResult", struct_name));
     let struct_browse_name = quote::Ident::from(format!("{}BrowseResult", struct_name));
-    
-    /*
-    let endpoint = match &format!("{}", struct_name) as &str {
-        "Artist" => "artist",
-        "Area" => "area",
-        "Release" => "release",
-        _ => ""
-    };
-    */
-    let endpoint = (format!("{}", struct_name) as String).to_lowercase();
 
+    let endpoint = (format!("{}", struct_name) as String).to_snake_case();
+    let api_endpoint = (format!("{}", struct_name) as String).to_kebab_case();
 
-    let field_result = quote::Ident::from(format!("{}s", endpoint));
+    let mut field_result = quote::Ident::new("");
+
+    if endpoint.chars().nth(endpoint.len() - 1).unwrap() == 's' ||
+        endpoint.chars().nth(endpoint.len() - 1).unwrap() == 'x' {
+        field_result = quote::Ident::from(format!("{}es", endpoint));
+    }
+    else {
+        field_result = quote::Ident::from(format!("{}s", endpoint));
+    }
     let field_offset = quote::Ident::from(format!("{}_offset", endpoint));
     let field_count = quote::Ident::from(format!("{}_count", endpoint));
 
     quote! {
         #[derive(Debug, Clone, Serialize, Deserialize)]
+        #[serde(rename_all = "kebab-case")]
         pub struct #struct_result_name {
             pub created: String,
             pub count: i32,
@@ -68,7 +71,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                       ) -> Box<Future<Item = Self, Error = hyper::Error>> {
 
                 let uri = &format!("{endpoint}/{id}",
-                                   endpoint=#endpoint,
+                                   endpoint=#api_endpoint,
                                    id=entity_id);
 
                 let body = client.get(uri, params).and_then(|res| {
@@ -93,7 +96,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                       params: &mut HashMap<&str, &str>
                       ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
 
-                let body = client.get(#endpoint,
+                let body = client.get(#api_endpoint,
                                       params).and_then(|res| { 
                                             res.body().concat2() 
                                       });
@@ -105,7 +108,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                             e
                         )
                     }).unwrap(); 
-                    futures::future::ok(res.#field_result) 
+                    futures::future::ok(res.#field_result)
                 });
 
                 Box::new(search_results)
@@ -116,7 +119,7 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                       params: &mut HashMap<&str, &str>
                       ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
 
-                let body = client.get(#endpoint,
+                let body = client.get(#api_endpoint,
                                       params).and_then(|res| { 
                                             res.body().concat2() 
                                       });
