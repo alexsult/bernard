@@ -19,7 +19,7 @@ pub trait Entity: Sized {
         params: &mut HashMap<&str, &str>,
     ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>>;
 
-    /// Performs a lookup of an entity by using its Bernard Identifier.
+    /// Performs a lookup of an entity by using its Musicbrainz' Identifier.
     ///
     /// # Example
     ///

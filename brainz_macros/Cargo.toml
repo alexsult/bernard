@@ -7,6 +7,8 @@ authors = ["Alexis SULTAN <sultan.alexis@gmail.com>"]
 syn = "0.11.9"
 quote = "0.3.15"
 Inflector = "0.11"
+percent-encoding = "1.0"
+regex = "0.2"
 
 [lib]
 proc-macro = true

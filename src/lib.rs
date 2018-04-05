@@ -24,6 +24,8 @@ use hyper::{Request, Response};
 pub struct Bernard {
     client: hyper::Client<hyper::client::HttpConnector, hyper::Body>,
     user_agent: String,
+    query_fmt: String,
+    params: String
 }
 
 pub fn get_endpoint(struct_type: &str) -> Result<String, Error> {
@@ -52,7 +54,30 @@ impl Bernard {
         Bernard {
             client: hyper::Client::new(&core.handle()),
             user_agent: user_agent,
+            query_fmt: String::from("fmt=json"),
+            params: String::new()
         }
+    }
+
+    pub fn set(&mut self,
+           param: &str,
+           val: &str) -> &mut Self {
+
+        // We add the params to the URL and replace spaces and other
+        // characters with their ascii code
+        // We do this "by hand" for the ampsersand
+        let mut pre_encoded_val: String = val.replace("&", "%26");
+        pre_encoded_val = regex::escape(pre_encoded_val.as_str());
+        pre_encoded_val = pre_encoded_val.replace("!", "");
+
+        self.params = format!("{}&{}={}",
+                                self.params,
+                                param,
+                                utf8_percent_encode(
+                                    pre_encoded_val.as_str(),
+                                    DEFAULT_ENCODE_SET)
+                                .to_string());
+        self
     }
 
     fn get(&self,
@@ -64,28 +89,20 @@ impl Bernard {
         // A bit dirty
         let base_uri = match env::var("MBZ_WS") {
             Ok(env_uri) => env_uri,
-            _ => String::from("https://musicbrainz.org/ws/2"),
+            _ => String::from("http://musicbrainz.org/ws/2"),
         };
 
-        let query_fmt = "fmt=json";
+        let mut endpoint = format!("{}/{}?{}", base_uri, url, self.query_fmt);
 
-        let mut endpoint = format!("{}/{}?{}", base_uri, url, query_fmt);
-
-        for (param, val) in params {
-            // We add the params to the URL and replace spaces and other 
-            // characters with their ascii code
-            // We do this "by hand" for the ampsersand
-            let mut pre_encoded_val: String = val.replace("&", "%26");
-            pre_encoded_val = regex::escape(pre_encoded_val.as_str());
-            pre_encoded_val = pre_encoded_val.replace("!", "");
-
+        if self.params.len() > 0 {
             endpoint = format!(
-                "{}&{}={}",
+                "{}{}",
                 endpoint,
-                param,
-                utf8_percent_encode(pre_encoded_val.as_str(), DEFAULT_ENCODE_SET).to_string()
+                self.params
             );
         }
+
+        println!("endpoint {}", endpoint);
 
         let user_agent = self.user_agent.clone();
         let mut req = Request::new(hyper::Method::Get, endpoint.parse().unwrap());

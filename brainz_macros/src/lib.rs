@@ -4,9 +4,12 @@ extern crate syn;
 #[macro_use]
 extern crate quote;
 extern crate inflector;
+extern crate percent_encoding;
+extern crate regex;
 
 use proc_macro::TokenStream;
 use inflector::Inflector;
+use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
 
 // copied pasted from:
 // https://doc.rust-lang.org/beta/book/procedural-macros.html
@@ -97,41 +100,41 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
                       ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
 
                 let body = client.get(#api_endpoint,
-                                      params).and_then(|res| { 
-                                            res.body().concat2() 
+                                      params).and_then(|res| {
+                                            res.body().concat2()
                                       });
 
                 let search_results = body.and_then(move |body| {
-                    let res: #struct_result_name = serde_json::from_slice(&body).map_err(|e| { 
+                    let res: #struct_result_name = serde_json::from_slice(&body).map_err(|e| {
                         io::Error::new(
                             io::ErrorKind::Other,
                             e
                         )
-                    }).unwrap(); 
+                    }).unwrap();
                     futures::future::ok(res.#field_result)
                 });
 
                 Box::new(search_results)
             }
 
-            fn browse(&self, 
+            fn browse(&self,
                       client: &super::super::Bernard,
                       params: &mut HashMap<&str, &str>
                       ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
 
                 let body = client.get(#api_endpoint,
-                                      params).and_then(|res| { 
-                                            res.body().concat2() 
+                                      params).and_then(|res| {
+                                            res.body().concat2()
                                       });
 
                 let search_results = body.and_then(move |body| {
-                    let res: #struct_browse_name = serde_json::from_slice(&body).map_err(|e| { 
+                    let res: #struct_browse_name = serde_json::from_slice(&body).map_err(|e| {
                         io::Error::new(
                             io::ErrorKind::Other,
                             e
                         )
-                    }).unwrap(); 
-                    futures::future::ok(res.#field_result) 
+                    }).unwrap();
+                    futures::future::ok(res.#field_result)
                 });
 
                 Box::new(search_results)

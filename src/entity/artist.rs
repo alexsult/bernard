@@ -52,16 +52,6 @@ pub struct Artist {
 }
 
 impl Artist {
-    pub fn new(name: String, sort_name: String) -> Artist {
-
-        let mut artist = Artist::empty();
-
-        artist.name = name;
-        artist.sort_name = sort_name;
-
-        artist
-    }
-
     pub fn empty() -> Artist {
         Artist {
             name: String::new(),
