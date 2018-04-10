@@ -30,6 +30,8 @@ pub fn entity(input: TokenStream) -> TokenStream {
 
 fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
     let struct_name = &ast.ident;
+    let struct_name_default = quote::Ident::from(format!("{}.default()", struct_name));
+    let struct_request = quote::Ident::from(format!("{}Request", struct_name));
     let struct_result_name = quote::Ident::from(format!("{}SearchResult", struct_name));
     let struct_browse_name = quote::Ident::from(format!("{}BrowseResult", struct_name));
 
@@ -49,6 +51,77 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
     let field_count = quote::Ident::from(format!("{}_count", endpoint));
 
     quote! {
+        pub struct #struct_request {
+            pub query_fmt: String,
+            pub params: String,
+            pub uri: String,
+            pub base_uri: String,
+            pub entity: #struct_name
+        }
+
+        impl #struct_request {
+            fn new() -> Self {
+                let base_uri = match env::var("MBZ_WS") {
+                    Ok(env_uri) => env_uri,
+                    _ => String::from("http://musicbrainz.org/ws/2"),
+                };
+
+                #struct_request {
+                    query_fmt: String::from("fmt=json"),
+                    params: String::new(),
+                    uri: String::new(),
+                    base_uri: base_uri,
+                    entity: #struct_name_default
+                }
+            }
+
+            pub fn set_param(&mut self,
+                       param: &str,
+                       val: &str) -> &mut Self {
+
+                // We add the params to the URL and replace spaces and other
+                // characters with their ascii code
+                // We do this "by hand" for the ampsersand
+                let mut pre_encoded_val: String = val.replace("&", "%26");
+                pre_encoded_val = regex::escape(pre_encoded_val.as_str());
+                pre_encoded_val = pre_encoded_val.replace("!", "");
+
+                self.params = format!("{}&{}={}",
+                                        self.params,
+                                        param,
+                                        utf8_percent_encode(
+                                            pre_encoded_val.as_str(),
+                                            DEFAULT_ENCODE_SET)
+                                        .to_string());
+                self
+            }
+
+            pub fn lookup(&mut self,
+                          entity_id: &Uuid) -> &mut Self {
+
+                self.uri = format!("{base_uri}/{endpoint}/{id}?{format}",
+                                   base_uri=base_uri,
+                                   endpoint=#endpoint,
+                                   id=entity_id,
+                                   format=self.format);
+
+                if self.params.len() > 0 {
+                    self.uri = format!(
+                        "{}{}",
+                        self.uri,
+                        self.params
+                        );
+                }
+                println!("{}", self.uri);
+
+                self
+            }
+
+            pub fn get(&self) -> #struct_name {
+                self.entity
+            }
+        }
+
         #[derive(Debug, Clone, Serialize, Deserialize)]
         #[serde(rename_all = "kebab-case")]
         pub struct #struct_result_name {

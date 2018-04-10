@@ -24,8 +24,6 @@ use hyper::{Request, Response};
 pub struct Bernard {
     client: hyper::Client<hyper::client::HttpConnector, hyper::Body>,
     user_agent: String,
-    query_fmt: String,
-    params: String
 }
 
 pub fn get_endpoint(struct_type: &str) -> Result<String, Error> {
@@ -53,31 +51,8 @@ impl Bernard {
 
         Bernard {
             client: hyper::Client::new(&core.handle()),
-            user_agent: user_agent,
-            query_fmt: String::from("fmt=json"),
-            params: String::new()
+            user_agent: user_agent
         }
-    }
-
-    pub fn set(&mut self,
-           param: &str,
-           val: &str) -> &mut Self {
-
-        // We add the params to the URL and replace spaces and other
-        // characters with their ascii code
-        // We do this "by hand" for the ampsersand
-        let mut pre_encoded_val: String = val.replace("&", "%26");
-        pre_encoded_val = regex::escape(pre_encoded_val.as_str());
-        pre_encoded_val = pre_encoded_val.replace("!", "");
-
-        self.params = format!("{}&{}={}",
-                                self.params,
-                                param,
-                                utf8_percent_encode(
-                                    pre_encoded_val.as_str(),
-                                    DEFAULT_ENCODE_SET)
-                                .to_string());
-        self
     }
 
     fn get(&self,
