@@ -6,6 +6,7 @@ use uuid::Uuid;
 use std::fmt;
 use std::collections::HashMap;
 use traits::Entity;
+use traits::Request;
 use serde_json;
 use enums::PersonType;
 use entity::alias::Alias;
@@ -17,8 +18,11 @@ use entity::recording::Recording;
 use entity::release::Release;
 use entity::work::Work;
 use entity::relation::Relation;
+use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
+use std::env;
+use regex;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Entity)]
+#[derive(Debug, Clone, Serialize, Deserialize, Entity, Request)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct Artist {

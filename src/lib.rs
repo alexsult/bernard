@@ -60,33 +60,39 @@ impl Bernard {
            params: &HashMap<&str, &str>
            ) -> Box<Future<Item = Response, Error = hyper::Error>> {
 
-        // TODO: add tls support
-        // A bit dirty
         let base_uri = match env::var("MBZ_WS") {
             Ok(env_uri) => env_uri,
-            _ => String::from("http://musicbrainz.org/ws/2"),
+            _ => String::from("https://musicbrainz.org/ws/2"),
         };
 
-        let mut endpoint = format!("{}/{}?{}", base_uri, url, self.query_fmt);
+        let query_fmt = "fmt=json";
 
-        if self.params.len() > 0 {
+        let mut endpoint = format!("{}/{}?{}", base_uri, url, query_fmt);
+
+        for (param, val) in params {
+            // We add the params to the URL and replace spaces and other 
+            // characters with their ascii code
+            // We do this "by hand" for the ampsersand
+            let mut pre_encoded_val: String = val.replace("&", "%26");
+            pre_encoded_val = regex::escape(pre_encoded_val.as_str());
+            pre_encoded_val = pre_encoded_val.replace("!", "");
             endpoint = format!(
-                "{}{}",
+                "{}&{}={}",
                 endpoint,
-                self.params
+                param,
+                utf8_percent_encode(pre_encoded_val.as_str(), DEFAULT_ENCODE_SET).to_string()
             );
         }
 
-        println!("endpoint {}", endpoint);
-
         let user_agent = self.user_agent.clone();
+
         let mut req = Request::new(hyper::Method::Get, endpoint.parse().unwrap());
+
         req.headers_mut().set(
             hyper::header::UserAgent::new(user_agent)
         );
 
         let response = self.client.request(req);
-
         Box::new(response)
     }
 

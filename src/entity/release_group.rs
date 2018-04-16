@@ -10,6 +10,10 @@ use traits::Entity;
 use serde_json;
 use entity::artist::ArtistCredit;
 use entity::release::Release;
+use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
+use std::env;
+use regex;
+
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]

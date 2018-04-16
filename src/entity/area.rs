@@ -10,6 +10,9 @@ use entity::tag::Tag;
 use entity::alias::Alias;
 use entity::relation::Relations;
 use entity::life_span::LifeSpan;
+use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
+use std::env;
+use regex;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
