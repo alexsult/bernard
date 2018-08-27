@@ -168,18 +168,19 @@ fn impl_request(ast: &syn::MacroInput) -> quote::Tokens {
 
     quote! {
         #[derive(Debug, Clone)]
-        pub struct #struct_request {
+        pub struct #struct_request<'a> {
             pub query_fmt: String,
             pub params: String,
             pub uri: String,
             pub base_uri: String,
-            pub entity: #struct_name
+            pub client: &'a super::super::Bernard
         }
 
-        impl Request for #struct_request {
+
+        impl<'a> Request for #struct_request {
             type Item = #struct_name;
 
-            fn new() -> Self {
+            fn new() -> #struct_request<'a> {
                 let defined_base_uri = match env::var("MBZ_WS") {
                     Ok(env_uri) => env_uri,
                     _ => String::from("http://musicbrainz.org/ws/2"),
@@ -190,13 +191,20 @@ fn impl_request(ast: &syn::MacroInput) -> quote::Tokens {
                     params: String::new(),
                     uri: String::new(),
                     base_uri: defined_base_uri,
-                    entity: #struct_name::default()
+                    client: None
                 }
             }
 
-            fn set_param(&mut self,
-                       param: &str,
-                       val: &str) -> &mut Self {
+            /*
+            fn client<'a>(&mut self,
+                     client: &'a super::super::Bernard) -> &'a mut Self {
+                self.client = client
+            }
+            */
+
+            fn set_param(&'a mut self,
+                       param: &'a str,
+                       val: &'a str) -> &'a mut Self {
 
                 // We add the params to the URL and replace spaces and other
                 // characters with their ascii code
@@ -215,8 +223,8 @@ fn impl_request(ast: &syn::MacroInput) -> quote::Tokens {
                 self
             }
 
-            fn lookup(&mut self,
-                          entity_id: &Uuid) -> &mut Self {
+            fn lookup(&'a mut self,
+                      entity_id: &'a Uuid) -> &'a mut Self {
 
                 self.uri = format!("{base_uri}/{endpoint}/{id}?{format}",
                                    base_uri=self.base_uri,
@@ -235,10 +243,6 @@ fn impl_request(ast: &syn::MacroInput) -> quote::Tokens {
                 println!("BUILD {}", self.uri);
 
                 self
-            }
-
-            fn get(&self) -> &#struct_name {
-                &self.entity
             }
         }
     }

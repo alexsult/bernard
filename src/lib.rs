@@ -55,6 +55,23 @@ impl Bernard {
         }
     }
 
+    fn get2(&self,
+            url: &str
+            ) -> Box<Future<Item = Response, Error = hyper::Error>> {
+
+        let user_agent = self.user_agent.clone();
+
+        let mut req = Request::new(hyper::Method::Get, url.parse().unwrap());
+
+        req.headers_mut().set(
+            hyper::header::UserAgent::new(user_agent)
+        );
+
+        let response = self.client.request(req);
+
+        Box::new(response)
+    }
+
     fn get(&self,
            url: &str,
            params: &HashMap<&str, &str>
@@ -100,6 +117,12 @@ impl Bernard {
         entity::artist::Artist::empty()
     }
 
+    pub fn artist_request<'a>(&self,
+                          client: &'a Bernard
+                          ) -> entity::artist::ArtistRequest<'a> {
+        entity::artist::ArtistRequest::new(client)
+    }
+
     pub fn recording(&self) -> entity::recording::Recording {
         entity::recording::Recording::empty()
     }
@@ -111,6 +134,7 @@ impl Bernard {
     pub fn release_group(&self) -> entity::release_group::ReleaseGroup {
         entity::release_group::ReleaseGroup::empty()
     }
+
 
 }
 

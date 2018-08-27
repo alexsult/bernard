@@ -2,7 +2,6 @@ use uuid::Uuid;
 use std::collections::HashMap;
 use hyper;
 use futures::Future;
-use std::fmt::Debug;
 
 pub trait Entity: Sized {
     /// Searches Bernard for entities based on the search query.
@@ -39,20 +38,18 @@ pub trait Entity: Sized {
 }
 
 
-pub trait Request: Sized {
+pub trait BernardRequest<'a>: Sized {
     type Item;
 
-    fn new() -> Self;
+    fn new(client: &'a super::Bernard) -> Self;
 
     fn set_param(
-        &mut self,
+        &'a mut self,
         param: &str,
-        val: &str) -> &mut Self ;
+        val: &str) -> &'a mut Self;
 
     fn lookup(
-        &mut self,
-        entity_id: &Uuid) -> &mut Self ;
+        &'a mut self,
+        entity_id: &Uuid) -> &'a mut Self;
 
-    fn get(
-        &self) -> &Self::Item;
 }

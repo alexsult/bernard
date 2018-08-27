@@ -1,13 +1,14 @@
 extern crate bernard;
 extern crate serde_json;
+extern crate tokio_core;
 use bernard::*;
+use tokio_core::reactor::Core;
 
 #[test]
-fn test_artist_instantation() {
-    let mut a = entity::artist::Artist::new(
-        String::from("Bernard Lavilliers"),
-        String::from("Lavilliers, Bernard"),
-    );
+fn test_artist_instantiation() {
+    let mut a = entity::artist::Artist::new();
+    a.name = String::from("Bernard Lavilliers");
+    a.sort_name = String::from("Lavilliers, Bernard");
 
     a.country = Some(String::from("FR"));
     a.score = Some(99);
@@ -20,11 +21,10 @@ fn test_artist_instantation() {
 
 #[test]
 fn test_artist_equal() {
-    let mut a = entity::artist::Artist::new(
-        String::from("Bernard Lavilliers"),
-        String::from("Lavilliers, Bernard"),
-    );
+    let mut a = entity::artist::Artist::new();
 
+    a.name = String::from("Bernard Lavilliers");
+    a.sort_name = String::from("Lavilliers, Bernard");
     a.id = Some(Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap());
 
     assert_eq!(a, a);
@@ -32,18 +32,15 @@ fn test_artist_equal() {
 
 #[test]
 fn test_artist_not_equal() {
-    let mut a = entity::artist::Artist::new(
-        String::from("Bernard Lavilliers"),
-        String::from("Lavilliers, Bernard"),
-    );
+    let mut a = entity::artist::Artist::new();
 
+    a.name = String::from("Bernard Lavilliers");
+    a.sort_name = String::from("Lavilliers, Bernard");
     a.id = Some(Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap());
 
-    let mut b = entity::artist::Artist::new(
-        String::from("Bernard Bonvoisin"),
-        String::from("Bonvoisin, Bernard"),
-    );
-
+    let mut b = entity::artist::Artist::new();
+    b.name = String::from("Bernard Bonvoisin");
+    b.sort_name = String::from("Bonvoisin, Bernard");
     b.id = Some(Uuid::parse_str("402cd0b7-8d71-45ef-8c10-100b17794158").unwrap());
 
     assert_ne!(a, b);
@@ -52,10 +49,9 @@ fn test_artist_not_equal() {
 #[test]
 #[should_panic]
 fn test_artist_equal_without_id() {
-    let a = entity::artist::Artist::new(
-        String::from("Bernard Lavilliers"),
-        String::from("Lavilliers, Bernard"),
-    );
+    let mut a = entity::artist::Artist::new();
+    a.name = String::from("Bernard Lavilliers");
+    a.sort_name = String::from("Lavilliers, Bernard");
 
     assert_eq!(a, a);
 }
@@ -101,8 +97,61 @@ fn test_artist_deserialization(){
             "begin": "1991",
             "end": null
         }}"#;
-    
+
     let res: entity::artist::Artist = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.name, "Radiohead");
     assert_eq!(res.area.unwrap().name, "United Kingdom");
+}
+
+/////////////////////
+// Request         //
+/////////////////////
+
+#[test]
+fn test_artist_request_instantiation() {
+    let core = Core::new().unwrap();
+    let bernard_client = Bernard::new(&core);
+    let artist_request = entity::artist::ArtistRequest::new(&bernard_client);
+
+    assert_eq!(artist_request.base_uri,
+               String::from("http://musicbrainz.org/ws/2"));
+}
+
+#[test]
+fn test_artist_request_set_param() {
+    let core = Core::new().unwrap();
+    let bernard_client = Bernard::new(&core);
+    let mut artist_request = entity::artist::ArtistRequest::new(&bernard_client);
+
+    let res = artist_request.set_param("key","value");
+
+    assert_eq!(res.params,
+               String::from("&key=value"));
+}
+
+#[test]
+fn test_artist_request_set_param_twice() {
+    let core = Core::new().unwrap();
+    let bernard_client = Bernard::new(&core);
+    let mut artist_request = entity::artist::ArtistRequest::new(&bernard_client);
+
+    let res = artist_request.set_param("key","value").
+                             set_param("key2","value2");
+
+    assert_eq!(res.params,
+               String::from("&key=value&key2=value2"));
+}
+
+#[test]
+fn test_artist_request_lookup() {
+    let core = Core::new().unwrap();
+    let bernard_client = Bernard::new(&core);
+    let mut artist_request = entity::artist::ArtistRequest::new(&bernard_client);
+
+    let res = artist_request.lookup(
+        &Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap()
+    );
+
+    assert_eq!(res.uri,
+               String::from("http://musicbrainz.org/ws/2/artist/8bef9bae-a250-4c4e-8e5e-b2f81607db2a?fmt=json"));
 }

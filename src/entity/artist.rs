@@ -6,7 +6,8 @@ use uuid::Uuid;
 use std::fmt;
 use std::collections::HashMap;
 use traits::Entity;
-use traits::Request;
+use traits::BernardRequest;
+//use traits::Request;
 use serde_json;
 use enums::PersonType;
 use entity::alias::Alias;
@@ -20,9 +21,12 @@ use entity::work::Work;
 use entity::relation::Relation;
 use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
 use std::env;
+use std::ptr;
 use regex;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Entity, Request)]
+
+//#[derive(Debug, Clone, Serialize, Deserialize, Entity, Request)]
+#[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
 pub struct Artist {
@@ -85,6 +89,10 @@ impl Artist {
             score: None,
         }
     }
+
+    pub fn new() -> Artist {
+        Artist::empty()
+    }
 }
 
 impl Default for Artist {
@@ -144,5 +152,74 @@ impl ArtistCredit {
 impl Default for ArtistCredit {
     fn default() -> ArtistCredit {
         ArtistCredit::empty()
+    }
+}
+
+pub struct ArtistRequest<'a> {
+    pub query_fmt: String,
+    pub params: String,
+    pub uri: String,
+    pub base_uri: String,
+    pub client: &'a super::super::Bernard
+}
+
+
+impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
+    type Item = Artist;
+
+    fn new(client: &'a super::super::Bernard) -> ArtistRequest<'a> {
+        let defined_base_uri = match env::var("MBZ_WS") {
+            Ok(env_uri) => env_uri,
+            _ => String::from("http://musicbrainz.org/ws/2"),
+        };
+
+        ArtistRequest {
+            query_fmt: String::from("fmt=json"),
+            params: String::new(),
+            uri: String::new(),
+            base_uri: defined_base_uri,
+            client: client
+        }
+    }
+
+    fn set_param(&'a mut self,
+                param: &str,
+                val: &str) -> &'a mut ArtistRequest  {
+
+        // We add the params to the URL and replace spaces and other
+        // characters with their ascii code
+        // We do this "by hand" for the ampsersand
+        let mut pre_encoded_val: String = val.replace("&", "%26");
+        pre_encoded_val = regex::escape(pre_encoded_val.as_str());
+        pre_encoded_val = pre_encoded_val.replace("!", "");
+
+        self.params = format!("{}&{}={}",
+                                self.params,
+                                param,
+                                utf8_percent_encode(
+                                    pre_encoded_val.as_str(),
+                                    DEFAULT_ENCODE_SET)
+                                .to_string());
+        self
+    }
+
+    fn lookup(&'a mut self,
+                entity_id: &Uuid) -> &'a mut Self {
+
+        self.uri = format!("{base_uri}/{endpoint}/{id}?{format}",
+                            base_uri=self.base_uri,
+                            endpoint="artist",
+                            id=entity_id,
+                            format=self.query_fmt);
+        /*
+        if self.params.len() > 0 {
+            self.uri = format!(
+                "{}{}",
+                self.uri,
+                self.params
+                );
+        }
+        */
+        self
     }
 }
