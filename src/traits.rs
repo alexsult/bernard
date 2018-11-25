@@ -48,8 +48,13 @@ pub trait BernardRequest<'a>: Sized {
         param: &str,
         val: &str) -> &'a mut Self;
 
-    fn lookup(
+    fn set_uuid(
         &'a mut self,
         entity_id: &Uuid) -> &'a mut Self;
+
+    fn build_lookup_uri(&'a self) -> String;
+
+    fn lookup(
+        &'a mut self) -> Box<Future<Item = Self::Item, Error = hyper::Error>>;
 
 }

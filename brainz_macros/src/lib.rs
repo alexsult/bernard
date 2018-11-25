@@ -145,7 +145,6 @@ fn impl_entity(ast: &syn::MacroInput) -> quote::Tokens {
     }
 }
 
-
 #[proc_macro_derive(Request)]
 pub fn request(input: TokenStream) -> TokenStream {
     // Construct a string representation of the type definition

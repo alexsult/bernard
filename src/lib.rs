@@ -48,7 +48,6 @@ impl Bernard {
             homepage = env!("CARGO_PKG_HOMEPAGE")
         );
 
-
         Bernard {
             client: hyper::Client::new(&core.handle()),
             user_agent: user_agent

@@ -158,6 +158,7 @@ impl Default for ArtistCredit {
 pub struct ArtistRequest<'a> {
     pub query_fmt: String,
     pub params: String,
+    pub entity_id: Uuid,
     pub uri: String,
     pub base_uri: String,
     pub client: &'a super::super::Bernard
@@ -176,6 +177,7 @@ impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
         ArtistRequest {
             query_fmt: String::from("fmt=json"),
             params: String::new(),
+            entity_id: Uuid::nil(),
             uri: String::new(),
             base_uri: defined_base_uri,
             client: client
@@ -184,7 +186,7 @@ impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
 
     fn set_param(&'a mut self,
                 param: &str,
-                val: &str) -> &'a mut ArtistRequest  {
+                val: &str) -> &'a mut ArtistRequest {
 
         // We add the params to the URL and replace spaces and other
         // characters with their ascii code
@@ -203,23 +205,56 @@ impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
         self
     }
 
-    fn lookup(&'a mut self,
-                entity_id: &Uuid) -> &'a mut Self {
+    fn set_uuid(&'a mut self,
+                entity_id: &Uuid)  -> &'a mut ArtistRequest {
 
-        self.uri = format!("{base_uri}/{endpoint}/{id}?{format}",
+        self.entity_id = entity_id.clone();
+        self
+    }
+
+    fn build_lookup_uri(&'a self) -> String {
+
+        let mut uri = format!("{base_uri}/{endpoint}/{id}?{format}",
                             base_uri=self.base_uri,
                             endpoint="artist",
-                            id=entity_id,
+                            id=self.entity_id,
                             format=self.query_fmt);
-        /*
+
         if self.params.len() > 0 {
-            self.uri = format!(
+            uri = format!(
                 "{}{}",
-                self.uri,
+                uri,
                 self.params
                 );
         }
+        uri
+    }
+
+    fn lookup(&'a mut self) -> Box<Future<Item = Self::Item, Error = hyper::Error>> {
+        // TODO: raise if no entity id
+
+        /*
+        if self.entity_id == Uuid::nil() {
+            return Box::new(futures::future::err("Entity ID must be set"))
+        }
         */
-        self
+
+        self.uri = self.build_lookup_uri();
+
+        let body = self.client.get2(&self.uri).and_then(|res| {
+                res.body().concat2()
+            });
+
+            let data_struct = body.and_then(move |body| {
+                let res: Artist = serde_json::from_slice(&body).map_err(|e| {
+                    io::Error::new(
+                        io::ErrorKind::Other,
+                        e
+                    )
+                }).unwrap();
+                futures::future::ok(res)
+            });
+
+            Box::new(data_struct)
     }
 }
