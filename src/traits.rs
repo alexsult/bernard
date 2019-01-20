@@ -1,5 +1,3 @@
-use uuid::Uuid;
-use std::collections::HashMap;
 use hyper;
 use futures::Future;
 
@@ -13,48 +11,28 @@ pub trait Entity: Sized {
     ///
     /// # Example
     ///
+    /*
     fn search(
         &self,
         client: &super::Bernard,
         params: &mut HashMap<&str, &str>,
     ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>>;
+    */
 
     /// Performs a lookup of an entity by using its Musicbrainz' Identifier.
     ///
     /// # Example
     ///
+
     fn lookup(
-        &self,
-        client: &super::Bernard,
-        entity_id: &Uuid,
-        params: &mut HashMap<&str, &str>,
+        bernard: &mut super::Bernard
     ) -> Box<Future<Item = Self, Error = hyper::Error>>;
 
+    /*
     fn browse(
         &self,
         client: &super::Bernard,
         params: &mut HashMap<&str, &str>,
     ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>>;
-}
-
-
-pub trait BernardRequest<'a>: Sized {
-    type Item;
-
-    fn new(client: &'a super::Bernard) -> Self;
-
-    fn set_param(
-        &'a mut self,
-        param: &str,
-        val: &str) -> &'a mut Self;
-
-    fn set_uuid(
-        &'a mut self,
-        entity_id: &Uuid) -> &'a mut Self;
-
-    fn build_lookup_uri(&'a self) -> String;
-
-    fn lookup(
-        &'a mut self) -> Box<Future<Item = Self::Item, Error = hyper::Error>>;
-
+    */
 }

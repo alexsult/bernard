@@ -57,25 +57,3 @@ where
     //Ok(Packaging::NoPack)
     Ok(packaging_return)
 }
-
-pub fn build_lookup_uri(base_uri: &str,
-                        endpoint: &str,
-                        entity_id: &Uuid,
-                        params: &str,
-                        query_fmt: &str) -> String {
-
-    let mut uri = format!("{base_uri}/{endpoint}/{id}?{format}",
-                        base_uri=base_uri,
-                        endpoint=endpoint,
-                        id=entity_id,
-                        format=query_fmt);
-
-    if params.len() > 0 {
-        uri = format!(
-            "{}{}",
-            uri,
-            params
-            );
-    }
-    uri
-}

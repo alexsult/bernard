@@ -1,9 +1,10 @@
 extern crate bernard;
+extern crate hyper;
 extern crate serde_json;
 extern crate tokio_core;
 use bernard::*;
+use entity::artist::Artist;
 use tokio_core::reactor::Core;
-use std::env;
 
 #[test]
 fn test_artist_instantiation() {
@@ -62,7 +63,7 @@ fn test_artist_equal_without_id() {
 /////////////////////
 
 #[test]
-fn test_artist_deserialization(){
+fn test_artist_deserialization() {
     let json_data = r#"{
         "disambiguation": "",
         "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
@@ -108,6 +109,7 @@ fn test_artist_deserialization(){
 // Request         //
 /////////////////////
 
+/*
 #[test]
 fn test_artist_request_instantiation() {
     let core = Core::new().unwrap();
@@ -231,4 +233,21 @@ fn test_artist_request_lookup() {
                    Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap()
                     )
                );
+}
+*/
+
+#[test]
+fn test_artist_request_lookup() {
+    let mut core = Core::new().unwrap();
+    let mut bernard_client = Bernard::new();
+
+    let req = bernard_client
+        .set_uuid("8bef9bae-a250-4c4e-8e5e-b2f81607db2a")
+        .lookup::<Artist>();
+
+    let res = core.run(req).unwrap();
+    assert_eq!(
+        res.id,
+        Some(Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap())
+    );
 }

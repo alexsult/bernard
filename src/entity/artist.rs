@@ -1,29 +1,20 @@
-use std::io;
-use futures;
-use hyper;
-use futures::{Future, Stream};
-use uuid::Uuid;
-use std::fmt;
-use std::collections::HashMap;
-use traits::Entity;
-use traits::BernardRequest;
-//use traits::Request;
-use serde_json;
-use enums::PersonType;
 use entity::alias::Alias;
-use entity::release_group::ReleaseGroup;
-use entity::life_span::LifeSpan;
 use entity::area::Area;
-use entity::tag::Tag;
+use entity::life_span::LifeSpan;
 use entity::recording::Recording;
-use entity::release::Release;
-use entity::work::Work;
 use entity::relation::Relation;
-use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use std::env;
-use std::ptr;
-use regex;
-
+use entity::release::Release;
+use entity::release_group::ReleaseGroup;
+use entity::tag::Tag;
+use entity::work::Work;
+use enums::PersonType;
+use futures::{Future, Stream};
+use hyper;
+use serde_json;
+use std::fmt;
+use std::io;
+use traits::Entity;
+use uuid::Uuid;
 
 //#[derive(Debug, Clone, Serialize, Deserialize, Entity, Request)]
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
@@ -93,6 +84,33 @@ impl Artist {
     pub fn new() -> Artist {
         Artist::empty()
     }
+
+    /*
+    pub fn lookup(bernard_request: &mut super::super::BenardRequest) ->
+        Box<Future<Item = Artist, Error = hyper::Error>> {
+        bernard_request.uri = build_lookup_uri(bernard_request.base_uri,
+                                               bernard_request.endpoint,
+                                               bernard_request.entity_id,
+                                               bernard_request.params,
+                                               bernard_request.query_fmt);
+
+        let body = bernard_request.client.get2(&bernard_request.uri).and_then(|res| {
+                res.body().concat2()
+            });
+
+        let data_struct = body.and_then(move |body| {
+            let res: Artist = serde_json::from_slice(&body).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    e
+                )
+            }).unwrap();
+           futures::future::ok(res)
+        });
+
+        Box::new(data_struct)
+    }
+    */
 }
 
 impl Default for Artist {
@@ -161,10 +179,10 @@ pub struct ArtistRequest<'a> {
     pub entity_id: Uuid,
     pub uri: String,
     pub base_uri: String,
-    pub client: &'a super::super::Bernard
+    pub client: &'a super::super::Bernard,
 }
 
-
+/*
 impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
     type Item = Artist;
 
@@ -238,23 +256,23 @@ impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
             return Box::new(futures::future::err("Entity ID must be set"))
         }
         */
+self.uri = self.build_lookup_uri();
 
-        self.uri = self.build_lookup_uri();
+let body = self.client.get2(&self.uri).and_then(|res| {
+res.body().concat2()
+});
 
-        let body = self.client.get2(&self.uri).and_then(|res| {
-                res.body().concat2()
-            });
+let data_struct = body.and_then(move |body| {
+let res: Artist = serde_json::from_slice(&body).map_err(|e| {
+io::Error::new(
+io::ErrorKind::Other,
+e
+)
+}).unwrap();
+futures::future::ok(res)
+});
 
-            let data_struct = body.and_then(move |body| {
-                let res: Artist = serde_json::from_slice(&body).map_err(|e| {
-                    io::Error::new(
-                        io::ErrorKind::Other,
-                        e
-                    )
-                }).unwrap();
-                futures::future::ok(res)
-            });
-
-            Box::new(data_struct)
-    }
+Box::new(data_struct)
 }
+}
+*/

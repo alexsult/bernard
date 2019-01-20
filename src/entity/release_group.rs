@@ -4,15 +4,11 @@ use futures::{Future, Stream};
 use hyper;
 use uuid::Uuid;
 use enums::*;
-use std::collections::HashMap;
 use std::fmt;
 use traits::Entity;
 use serde_json;
 use entity::artist::ArtistCredit;
 use entity::release::Release;
-use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use std::env;
-use regex;
 
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]

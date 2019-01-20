@@ -3,16 +3,12 @@ use futures::{Future, Stream};
 use futures;
 use hyper;
 use uuid::Uuid;
-use std::collections::HashMap;
 use serde_json;
 use traits::Entity;
 use entity::tag::Tag;
 use entity::alias::Alias;
 use entity::relation::Relations;
 use entity::life_span::LifeSpan;
-use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use std::env;
-use regex;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]

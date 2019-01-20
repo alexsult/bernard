@@ -1,133 +1,37 @@
-extern crate hyper;
-extern crate uuid;
-extern crate serde_json;
-extern crate serde;
 extern crate futures;
-extern crate tokio_core;
+extern crate hyper;
 extern crate percent_encoding;
 extern crate regex;
+extern crate serde;
+extern crate serde_json;
+extern crate tokio_core;
+extern crate uuid;
 
 //  PjjLUfqyu22t8KGr
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
-extern crate brainz_macros;
+extern crate entity_macro;
 
-use std::io;
-use std::env;
-use std::collections::HashMap;
-use error::Error;
-use futures::{Future, Stream};
-use tokio_core::reactor::Core;
+use futures::Future;
+use hyper::client::ResponseFuture;
+use hyper::header::USER_AGENT;
+use hyper::http::Request;
 use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use hyper::{Request, Response};
-use utils::build_lookup_uri;
+use std::env;
 
 #[derive(Debug)]
 pub struct Bernard {
     client: hyper::Client<hyper::client::HttpConnector, hyper::Body>,
     user_agent: String,
+    query_fmt: String,
+    params: String,
+    entity_id: Uuid,
+    uri: String,
+    base_uri: String,
 }
 
-pub fn get_endpoint(struct_type: &str) -> Result<String, Error> {
-    match struct_type {
-        "Artist" => Ok(String::from("artist")),
-        _ => Err(Error::AsSlice),
-    }
-}
-
-pub struct BenardRequest<'a> {
-    pub query_fmt: String,
-    pub params: String,
-    pub entity_id: Uuid,
-    pub uri: String,
-    pub base_uri: String,
-    pub client: &'a Bernard
-}
-
-impl<'a> BenardRequest<'a> {
-    fn new(client: &'a Bernard) -> BenardRequest<'a> {
-        let defined_base_uri = match env::var("MBZ_WS") {
-            Ok(env_uri) => env_uri,
-            _ => String::from("http://musicbrainz.org/ws/2"),
-        };
-
-        BenardRequest {
-            query_fmt: String::from("fmt=json"),
-            params: String::new(),
-            entity_id: Uuid::nil(),
-            uri: String::new(),
-            base_uri: defined_base_uri,
-            client: client
-        }
-    }
-
-    pub fn set_param(&'a mut self,
-                param: &str,
-                val: &str) -> &'a mut BenardRequest {
-
-        // We add the params to the URL and replace spaces and other
-        // characters with their ascii code
-        // We do this "by hand" for the ampsersand
-        let mut pre_encoded_val: String = val.replace("&", "%26");
-        pre_encoded_val = regex::escape(pre_encoded_val.as_str());
-        pre_encoded_val = pre_encoded_val.replace("!", "");
-
-        self.params = format!("{}&{}={}",
-                                self.params,
-                                param,
-                                utf8_percent_encode(
-                                    pre_encoded_val.as_str(),
-                                    DEFAULT_ENCODE_SET)
-                                .to_string());
-        self
-    }
-
-    pub fn set_uuid(&'a mut self,
-                entity_id: &Uuid)  -> &'a mut BenardRequest {
-
-        self.entity_id = entity_id.clone();
-        self
-    }
-
-    fn lookup<'b, T>(&'a mut self) -> Box<Future<Item = T, Error = hyper::Error>>
-        where T: Entity
-        {
-        // TODO: raise if no entity id
-
-        /*
-        if self.entity_id == Uuid::nil() {
-            return Box::new(futures::future::err("Entity ID must be set"))
-        }
-        */
-        let ret = 
-
-        self.uri = build_lookup_uri(&self.base_uri,
-                                    "artist",
-                                    &self.entity_id,
-                                    &self.params,
-                                    &self.query_fmt);
-
-        let body = self.client.get2(&self.uri).and_then(|res| {
-                res.body().concat2()
-            });
-
-            let data_struct = body.and_then(move |body| {
-                let res: Entity = serde_json::from_slice(&body).map_err(|e| {
-                    io::Error::new(
-                        io::ErrorKind::Other,
-                        e
-                    )
-                }).unwrap();
-                futures::future::ok(res)
-            });
-
-            Box::new(data_struct)
-    }
-
-}
-
-impl Bernard {
+impl<'a> Bernard {
     /// Instantiates a new `Bernard` struct.
     ///
     /// The `Bernard` struct contains useful methods required by the library.
@@ -135,89 +39,89 @@ impl Bernard {
     ///
     /// # Example
     ///
-    pub fn new(core: &Core) -> Bernard {
-        let user_agent = format!("{name}/{version} ( {homepage} )",
+    pub fn new() -> Bernard {
+        let user_agent = format!(
+            "{name}/{version} ( {homepage} )",
             name = env!("CARGO_PKG_NAME"),
             version = env!("CARGO_PKG_VERSION"),
             homepage = env!("CARGO_PKG_HOMEPAGE")
         );
 
-        Bernard {
-            client: hyper::Client::new(&core.handle()),
-            user_agent: user_agent
-        }
-    }
-
-    pub fn request<'a>(&'a self) -> BenardRequest<'a> {
-        BenardRequest::new(self)
-    }
-
-    fn get2(&self,
-            url: &str
-            ) -> Box<Future<Item = Response, Error = hyper::Error>> {
-
-        let user_agent = self.user_agent.clone();
-
-        let mut req = Request::new(hyper::Method::Get, url.parse().unwrap());
-
-        req.headers_mut().set(
-            hyper::header::UserAgent::new(user_agent)
-        );
-
-        let response = self.client.request(req);
-
-        Box::new(response)
-    }
-
-    fn get(&self,
-           url: &str,
-           params: &HashMap<&str, &str>
-           ) -> Box<Future<Item = Response, Error = hyper::Error>> {
-
         let base_uri = match env::var("MBZ_WS") {
             Ok(env_uri) => env_uri,
-            _ => String::from("https://musicbrainz.org/ws/2"),
+            _ => String::from("http://musicbrainz.org/ws/2"),
         };
 
-        let query_fmt = "fmt=json";
-
-        let mut endpoint = format!("{}/{}?{}", base_uri, url, query_fmt);
-
-        for (param, val) in params {
-            // We add the params to the URL and replace spaces and other 
-            // characters with their ascii code
-            // We do this "by hand" for the ampsersand
-            let mut pre_encoded_val: String = val.replace("&", "%26");
-            pre_encoded_val = regex::escape(pre_encoded_val.as_str());
-            pre_encoded_val = pre_encoded_val.replace("!", "");
-            endpoint = format!(
-                "{}&{}={}",
-                endpoint,
-                param,
-                utf8_percent_encode(pre_encoded_val.as_str(), DEFAULT_ENCODE_SET).to_string()
-            );
+        Bernard {
+            client: hyper::Client::new(),
+            user_agent: user_agent,
+            query_fmt: String::from("fmt=json"),
+            params: String::new(),
+            entity_id: Uuid::nil(),
+            uri: String::new(),
+            base_uri: base_uri,
         }
+    }
 
-        let user_agent = self.user_agent.clone();
+    pub fn set_param(&'a mut self, param: &str, val: &str) -> &'a mut Bernard {
+        // We add the params to the URL and replace spaces and other
+        // characters with their ascii code
+        // We do this "by hand" for the ampsersand
+        let mut pre_encoded_val: String = val.replace("&", "%26");
+        pre_encoded_val = regex::escape(pre_encoded_val.as_str());
+        pre_encoded_val = pre_encoded_val.replace("!", "");
 
-        let mut req = Request::new(hyper::Method::Get, endpoint.parse().unwrap());
+        self.params = format!(
+            "{}&{}={}",
+            self.params,
+            param,
+            utf8_percent_encode(pre_encoded_val.as_str(), DEFAULT_ENCODE_SET).to_string()
+        );
+        self
+    }
 
-        req.headers_mut().set(
-            hyper::header::UserAgent::new(user_agent)
+    pub fn build_lookup_uri(&mut self, api_endpoint: &str) {
+        self.uri = format!(
+            "{base_uri}/{endpoint}/{id}?{format}",
+            base_uri = self.base_uri,
+            endpoint = api_endpoint,
+            id = self.entity_id,
+            format = self.query_fmt
         );
 
-        let response = self.client.request(req);
-        Box::new(response)
+        if self.params.len() > 0 {
+            self.uri = format!("{}{}", self.uri, self.params);
+        }
+    }
+
+    pub fn set_uuid(&'a mut self, entity_id: &str) -> &'a mut Bernard {
+        self.entity_id = Uuid::parse_str(entity_id).unwrap();
+        self
+    }
+
+    pub fn lookup<T>(&mut self) -> Box<Future<Item = T, Error = hyper::Error>>
+    where
+        T: Entity,
+    {
+        return T::lookup(self);
+    }
+
+    pub fn get(&self) -> ResponseFuture {
+        let user_agent = self.user_agent.clone();
+        let uri = self.uri.clone();
+
+        let req = Request::builder()
+            .method("GET")
+            .uri(uri)
+            .header(USER_AGENT, user_agent)
+            .body(hyper::Body::empty())
+            .unwrap();
+
+        self.client.request(req)
     }
 
     pub fn artist(&self) -> entity::artist::Artist {
         entity::artist::Artist::empty()
-    }
-
-    pub fn artist_request<'a>(&self,
-                          client: &'a Bernard
-                          ) -> entity::artist::ArtistRequest<'a> {
-        entity::artist::ArtistRequest::new(client)
     }
 
     pub fn recording(&self) -> entity::recording::Recording {
@@ -231,8 +135,6 @@ impl Bernard {
     pub fn release_group(&self) -> entity::release_group::ReleaseGroup {
         entity::release_group::ReleaseGroup::empty()
     }
-
-
 }
 
 pub mod enums;

@@ -3,7 +3,6 @@ use futures;
 use futures::{Future, Stream};
 use hyper;
 use text_representation::TextRepresentation;
-use std::collections::HashMap;
 use traits::Entity;
 use uuid::Uuid;
 use enums::*;
@@ -15,9 +14,6 @@ use entity::cover_art_archive::CoverArtArchive;
 use entity::label::{LabelInfo, Label};
 use entity::media::Media;
 use entity::release_group::ReleaseGroup;
-use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use std::env;
-use regex;
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

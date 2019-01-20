@@ -3,14 +3,10 @@ use hyper;
 use futures;
 use futures::{Future, Stream};
 use uuid::Uuid;
-use std::collections::HashMap;
 use serde_json;
 use traits::Entity;
 use entity::life_span::LifeSpan;
 use entity::relation::Relation;
-use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use std::env;
-use regex;
 
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]

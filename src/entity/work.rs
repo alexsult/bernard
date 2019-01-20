@@ -5,13 +5,9 @@ use hyper;
 use serde_json;
 use uuid::Uuid;
 use traits::Entity;
-use std::collections::HashMap;
 use entity::artist::ArtistCredit;
 use entity::tag::Tag;
 use entity::relation::Relation;
-use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use std::env;
-use regex;
 
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
