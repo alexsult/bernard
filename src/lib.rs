@@ -94,16 +94,22 @@ impl<'a> Bernard {
         }
     }
 
+    pub fn build_search_uri(&mut self, api_endpoint: &str) {
+        self.uri = format!(
+            "{base_uri}/{endpoint}/?{format}",
+            base_uri = self.base_uri,
+            endpoint = api_endpoint,
+            format = self.query_fmt
+        );
+
+        if self.params.len() > 0 {
+            self.uri = format!("{}{}", self.uri, self.params);
+        }
+    }
+
     pub fn set_uuid(&'a mut self, entity_id: &str) -> &'a mut Bernard {
         self.entity_id = Uuid::parse_str(entity_id).unwrap();
         self
-    }
-
-    pub fn lookup<T>(&mut self) -> Box<Future<Item = T, Error = hyper::Error>>
-    where
-        T: Entity,
-    {
-        return T::lookup(self);
     }
 
     pub fn get(&self) -> ResponseFuture {
@@ -120,20 +126,25 @@ impl<'a> Bernard {
         self.client.request(req)
     }
 
-    pub fn artist(&self) -> entity::artist::Artist {
-        entity::artist::Artist::empty()
+    pub fn lookup<T>(&mut self) -> Box<Future<Item = T, Error = hyper::Error>>
+    where
+        T: Entity,
+    {
+        return T::lookup(self);
     }
 
-    pub fn recording(&self) -> entity::recording::Recording {
-        entity::recording::Recording::empty()
+    pub fn search<T>(&mut self) -> Box<Future<Item = Vec<T>, Error = hyper::Error>>
+    where
+        T: Entity,
+    {
+        return T::search(self);
     }
 
-    pub fn release(&self) -> entity::release::Release {
-        entity::release::Release::empty()
-    }
-
-    pub fn release_group(&self) -> entity::release_group::ReleaseGroup {
-        entity::release_group::ReleaseGroup::empty()
+    pub fn browse<T>(&mut self) -> Box<Future<Item = Vec<T>, Error = hyper::Error>>
+    where
+        T: Entity,
+    {
+        return T::browse(self);
     }
 }
 

@@ -23,17 +23,18 @@ fn impl_entity_macro(ast: &syn::DeriveInput) -> TokenStream {
 
     let api_endpoint = (format!("{}", struct_name) as String).to_kebab_case();
 
-    let mut tmp_field_result = String::new();
-
-    if endpoint.chars().nth(endpoint.len() - 1).unwrap() == 's'
-        || endpoint.chars().nth(endpoint.len() - 1).unwrap() == 'x'
-    {
-        tmp_field_result = format!("{}es", endpoint);
-    } else {
-        tmp_field_result = format!("{}s", endpoint);
-    }
-
-    let field_result = Ident::new(&tmp_field_result, Span::call_site());
+    let field_result = Ident::new(
+        &{
+            if endpoint.chars().nth(endpoint.len() - 1).unwrap() == 's'
+                || endpoint.chars().nth(endpoint.len() - 1).unwrap() == 'x'
+            {
+                format!("{}es", endpoint)
+            } else {
+                format!("{}s", endpoint)
+            }
+        },
+        Span::call_site(),
+    );
 
     let field_offset = Ident::new(&format!("{}_offset", endpoint), Span::call_site());
     let field_count = Ident::new(&format!("{}_count", endpoint), Span::call_site());
@@ -58,7 +59,7 @@ fn impl_entity_macro(ast: &syn::DeriveInput) -> TokenStream {
 
         impl Entity for #struct_name {
             fn lookup(bernard_request: &mut super::super::Bernard) ->
-                    Box<Future<Item = #struct_name, Error = hyper::Error>> {
+                Box<Future<Item = #struct_name, Error = hyper::Error>> {
 
                 bernard_request.build_lookup_uri(#api_endpoint);
 
@@ -79,18 +80,16 @@ fn impl_entity_macro(ast: &syn::DeriveInput) -> TokenStream {
                 Box::new(data_struct)
             }
 
-            /*
-            fn search(&self,
-                      client: &super::super::Bernard,
-                      params: &mut HashMap<&str, &str>
-                      ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
+            fn search(bernard_request: &mut super::super::Bernard) ->
+                Box<Future<Item = Vec<#struct_name>, Error = hyper::Error>> {
 
-                let body = client.get(#api_endpoint,
-                                      params).and_then(|res| {
-                                            res.body().concat2()
-                                      });
+                bernard_request.build_search_uri(#api_endpoint);
 
-                let search_results = body.and_then(move |body| {
+                let body = bernard_request.get().and_then(|res| {
+                    res.into_body().concat2()
+                });
+
+                let data_struct = body.and_then(move |body| {
                     let res: #struct_result_name = serde_json::from_slice(&body).map_err(|e| {
                         io::Error::new(
                             io::ErrorKind::Other,
@@ -100,20 +99,19 @@ fn impl_entity_macro(ast: &syn::DeriveInput) -> TokenStream {
                     futures::future::ok(res.#field_result)
                 });
 
-                Box::new(search_results)
+                Box::new(data_struct)
             }
 
-            fn browse(&self,
-                      client: &super::super::Bernard,
-                      params: &mut HashMap<&str, &str>
-                      ) -> Box<Future<Item = Vec<Self>, Error = hyper::Error>> {
+            fn browse(bernard_request: &mut super::super::Bernard) ->
+                Box<Future<Item = Vec<#struct_name>, Error = hyper::Error>> {
 
-                let body = client.get(#api_endpoint,
-                                      params).and_then(|res| {
-                                            res.body().concat2()
-                                      });
+                bernard_request.build_search_uri(#api_endpoint);
 
-                let search_results = body.and_then(move |body| {
+                let body = bernard_request.get().and_then(|res| {
+                    res.into_body().concat2()
+                });
+
+                let data_struct = body.and_then(move |body| {
                     let res: #struct_browse_name = serde_json::from_slice(&body).map_err(|e| {
                         io::Error::new(
                             io::ErrorKind::Other,
@@ -123,10 +121,10 @@ fn impl_entity_macro(ast: &syn::DeriveInput) -> TokenStream {
                     futures::future::ok(res.#field_result)
                 });
 
-                Box::new(search_results)
+                Box::new(data_struct)
             }
-            */
         }
     };
+
     gen.into()
 }

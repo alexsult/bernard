@@ -251,3 +251,19 @@ fn test_artist_request_lookup() {
         Some(Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap())
     );
 }
+
+#[test]
+fn test_artist_request_search() {
+    let mut core = Core::new().unwrap();
+    let mut bernard_client = Bernard::new();
+
+    let req = bernard_client
+        .set_param("query", "Lavilliers")
+        .search::<Artist>();
+
+    let res = core.run(req).unwrap();
+    assert_eq!(
+        res[0].id,
+        Some(Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap())
+    );
+}
