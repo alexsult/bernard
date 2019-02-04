@@ -16,7 +16,6 @@ use std::io;
 use traits::Entity;
 use uuid::Uuid;
 
-//#[derive(Debug, Clone, Serialize, Deserialize, Entity, Request)]
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
 #[serde(default)]
@@ -84,33 +83,6 @@ impl Artist {
     pub fn new() -> Artist {
         Artist::empty()
     }
-
-    /*
-    pub fn lookup(bernard_request: &mut super::super::BenardRequest) ->
-        Box<Future<Item = Artist, Error = hyper::Error>> {
-        bernard_request.uri = build_lookup_uri(bernard_request.base_uri,
-                                               bernard_request.endpoint,
-                                               bernard_request.entity_id,
-                                               bernard_request.params,
-                                               bernard_request.query_fmt);
-
-        let body = bernard_request.client.get2(&bernard_request.uri).and_then(|res| {
-                res.body().concat2()
-            });
-
-        let data_struct = body.and_then(move |body| {
-            let res: Artist = serde_json::from_slice(&body).map_err(|e| {
-                io::Error::new(
-                    io::ErrorKind::Other,
-                    e
-                )
-            }).unwrap();
-           futures::future::ok(res)
-        });
-
-        Box::new(data_struct)
-    }
-    */
 }
 
 impl Default for Artist {
@@ -172,107 +144,3 @@ impl Default for ArtistCredit {
         ArtistCredit::empty()
     }
 }
-
-pub struct ArtistRequest<'a> {
-    pub query_fmt: String,
-    pub params: String,
-    pub entity_id: Uuid,
-    pub uri: String,
-    pub base_uri: String,
-    pub client: &'a super::super::Bernard,
-}
-
-/*
-impl<'a> BernardRequest<'a> for ArtistRequest<'a> {
-    type Item = Artist;
-
-    fn new(client: &'a super::super::Bernard) -> ArtistRequest<'a> {
-        let defined_base_uri = match env::var("MBZ_WS") {
-            Ok(env_uri) => env_uri,
-            _ => String::from("http://musicbrainz.org/ws/2"),
-        };
-
-        ArtistRequest {
-            query_fmt: String::from("fmt=json"),
-            params: String::new(),
-            entity_id: Uuid::nil(),
-            uri: String::new(),
-            base_uri: defined_base_uri,
-            client: client
-        }
-    }
-
-    fn set_param(&'a mut self,
-                param: &str,
-                val: &str) -> &'a mut ArtistRequest {
-
-        // We add the params to the URL and replace spaces and other
-        // characters with their ascii code
-        // We do this "by hand" for the ampsersand
-        let mut pre_encoded_val: String = val.replace("&", "%26");
-        pre_encoded_val = regex::escape(pre_encoded_val.as_str());
-        pre_encoded_val = pre_encoded_val.replace("!", "");
-
-        self.params = format!("{}&{}={}",
-                                self.params,
-                                param,
-                                utf8_percent_encode(
-                                    pre_encoded_val.as_str(),
-                                    DEFAULT_ENCODE_SET)
-                                .to_string());
-        self
-    }
-
-    fn set_uuid(&'a mut self,
-                entity_id: &Uuid)  -> &'a mut ArtistRequest {
-
-        self.entity_id = entity_id.clone();
-        self
-    }
-
-    fn build_lookup_uri(&'a self) -> String {
-
-        let mut uri = format!("{base_uri}/{endpoint}/{id}?{format}",
-                            base_uri=self.base_uri,
-                            endpoint="artist",
-                            id=self.entity_id,
-                            format=self.query_fmt);
-
-        if self.params.len() > 0 {
-            uri = format!(
-                "{}{}",
-                uri,
-                self.params
-                );
-        }
-        uri
-    }
-
-    fn lookup(&'a mut self) -> Box<Future<Item = Self::Item, Error = hyper::Error>> {
-        // TODO: raise if no entity id
-
-        /*
-        if self.entity_id == Uuid::nil() {
-            return Box::new(futures::future::err("Entity ID must be set"))
-        }
-        */
-self.uri = self.build_lookup_uri();
-
-let body = self.client.get2(&self.uri).and_then(|res| {
-res.body().concat2()
-});
-
-let data_struct = body.and_then(move |body| {
-let res: Artist = serde_json::from_slice(&body).map_err(|e| {
-io::Error::new(
-io::ErrorKind::Other,
-e
-)
-}).unwrap();
-futures::future::ok(res)
-});
-
-Box::new(data_struct)
-}
-}
-*/
