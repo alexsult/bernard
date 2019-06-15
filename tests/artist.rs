@@ -242,8 +242,8 @@ fn test_artist_request_lookup() {
     let mut bernard_client = Bernard::new();
 
     let req = bernard_client
-        .set_uuid("8bef9bae-a250-4c4e-8e5e-b2f81607db2a")
-        .lookup::<Artist>();
+        .lookup("8bef9bae-a250-4c4e-8e5e-b2f81607db2a")
+        .load::<Artist>();
 
     let res = core.run(req).unwrap();
     assert_eq!(
@@ -258,12 +258,31 @@ fn test_artist_request_search() {
     let mut bernard_client = Bernard::new();
 
     let req = bernard_client
-        .set_param("query", "Lavilliers")
-        .search::<Artist>();
+        .search("Lavilliers")
+        .load::<Artist>();
 
     let res = core.run(req).unwrap();
     assert_eq!(
         res[0].id,
         Some(Uuid::parse_str("8bef9bae-a250-4c4e-8e5e-b2f81607db2a").unwrap())
+    );
+}
+
+#[test]
+fn test_artist_request_browse() {
+    let mut core = Core::new().unwrap();
+    let mut bernard_client = Bernard::new();
+
+    let req = bernard_client
+        .browse()
+        .area("6d40e32c-1a5e-4599-b06c-6ab3759d51fe")
+        .load::<Artist>();
+
+    let mut res = core.run(req).unwrap();
+    let elem = res.pop();
+
+    assert_eq!(
+        elem.unwrap().area.unwrap().id,
+        Some(Uuid::parse_str("6d40e32c-1a5e-4599-b06c-6ab3759d51fe").unwrap())
     );
 }
