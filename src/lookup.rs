@@ -9,16 +9,15 @@ use Entity;
 pub struct BernardLookup<'a> {
     bernard: &'a mut Bernard,
     mbid: Uuid,
-    includes: Vec<String>
+    includes: Vec<String>,
 }
 
 impl<'a> BernardLookup<'a> {
-    pub fn new(bernard: &'a mut Bernard,
-               mbid: &'a str) -> BernardLookup<'a> {
+    pub fn new(bernard: &'a mut Bernard, mbid: &'a str) -> BernardLookup<'a> {
         BernardLookup {
             bernard: bernard,
             mbid: Uuid::parse_str(mbid).unwrap(),
-            includes: Vec::new()
+            includes: Vec::new(),
         }
     }
 
@@ -36,14 +35,13 @@ impl<'a> BernardLookup<'a> {
         for include in &self.includes {
             if inc.len() == 0 {
                 inc = format!("{}", include)
-            }
-            else {
+            } else {
                 inc = format!("{},{}", inc, include)
             }
         }
 
         if inc.len() > 0 {
-            self.bernard.set_param("inc", &inc) ;
+            self.bernard.set_param("inc", &inc);
         }
 
         self.bernard.mbid = self.mbid;

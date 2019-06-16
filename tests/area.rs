@@ -8,7 +8,7 @@ fn test_area_instantation() {
         String::from("France"),
         String::from("France"),
     );
-    
+
     a.iso_3166_1_codes = Some(vec!(String::from("FR")));
     a.area_type = Some(String::from("Country"));
 
@@ -33,7 +33,7 @@ fn test_area_deserialization(){
         "sort-name": "Canada",
         "name": "Canada"
     }"#;
-    
+
     let res: entity::area::Area = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.name, "Canada");
     assert_eq!(res.sort_name, "Canada");
@@ -73,7 +73,7 @@ fn test_area_with_relation_list_parsing(){
                 }
             ]
         }"#;
-    
+
     let res: entity::area::Area = serde_json::from_str(json_data).unwrap();
 
     let relation_list = res.relation_list.unwrap(); 

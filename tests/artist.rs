@@ -4,6 +4,7 @@ extern crate serde_json;
 extern crate tokio_core;
 use bernard::*;
 use entity::artist::Artist;
+use std::env;
 use tokio_core::reactor::Core;
 
 #[test]
@@ -110,21 +111,6 @@ fn test_artist_deserialization() {
 /////////////////////
 
 /*
-#[test]
-fn test_artist_request_instantiation() {
-    let core = Core::new().unwrap();
-    let bernard_client = Bernard::new(&core);
-    let artist_request = entity::artist::ArtistRequest::new(&bernard_client);
-
-    let defined_base_uri = match env::var("MBZ_WS") {
-        Ok(env_uri) => env_uri,
-        _ => String::from("http://musicbrainz.org/ws/2"),
-    };
-
-    assert_eq!(artist_request.base_uri,
-               defined_base_uri);
-}
-
 #[test]
 fn test_artist_request_set_param() {
     let core = Core::new().unwrap();
@@ -257,9 +243,7 @@ fn test_artist_request_search() {
     let mut core = Core::new().unwrap();
     let mut bernard_client = Bernard::new();
 
-    let req = bernard_client
-        .search("Lavilliers")
-        .load::<Artist>();
+    let req = bernard_client.search("Lavilliers").load::<Artist>();
 
     let res = core.run(req).unwrap();
     assert_eq!(
