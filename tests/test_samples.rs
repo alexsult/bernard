@@ -34,7 +34,7 @@ fn test_samples_area() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::area::Area = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::area::Area = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -52,7 +52,7 @@ fn test_samples_cover_art_archive() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::cover_art_archive::CoverArtArchive = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::cover_art_archive::CoverArtArchive = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -70,7 +70,7 @@ fn test_samples_release() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::release::Release = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::release::Release = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -88,7 +88,7 @@ fn test_samples_tag() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::tag::Tag = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::tag::Tag = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -106,7 +106,7 @@ fn test_samples_release_group() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::release_group::ReleaseGroup = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::release_group::ReleaseGroup = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -125,7 +125,7 @@ fn test_samples_release_event() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::release::ReleaseEvent = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::release::ReleaseEvent = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -161,7 +161,7 @@ fn test_samples_media() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::media::Media = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::media::Media = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -179,7 +179,7 @@ fn test_samples_recording() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::recording::Recording = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::recording::Recording = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -197,7 +197,7 @@ fn test_samples_track() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::track::Track = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::track::Track = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -215,7 +215,7 @@ fn test_samples_alias() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::alias::Alias = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::alias::Alias = serde_json::from_str(contents.as_str()).unwrap();
     }
 }
 
@@ -233,6 +233,6 @@ fn test_samples_artist_credit() {
         f.read_to_string(&mut contents)
             .expect("something went wrong reading the file");
 
-        let _res: entity::artist::ArtistCredit = serde_json::from_str(contents.as_str()).unwrap();
+        let _res: entities::artist::ArtistCredit = serde_json::from_str(contents.as_str()).unwrap();
     }
 }

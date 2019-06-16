@@ -4,7 +4,7 @@ use bernard::*;
 
 #[test]
 fn test_release_event_instantation() {
-    let mut a = entity::release::ReleaseEvent::new(String::from("1992-09-21"));
+    let mut a = entities::release::ReleaseEvent::new(String::from("1992-09-21"));
 
     a.country = Some(String::from("GB"));
 
@@ -16,7 +16,7 @@ fn test_release_event_instantation() {
 fn test_release_instantation() {
     let text_rep = text_representation::TextRepresentation::empty();
 
-    let mut a = entity::release::Release::new(String::from("Creep"),
+    let mut a = entities::release::Release::new(String::from("Creep"),
                                               text_rep);
 
     a.asin = Some(String::from("B000EHLKNU"));
@@ -41,6 +41,6 @@ fn test_release_browse_parsing(){
         "release-count": 58
     }"#;
     
-    let res: entity::release::ReleaseBrowseResult = serde_json::from_str(json_data).unwrap();
+    let res: entities::release::ReleaseBrowseResult = serde_json::from_str(json_data).unwrap();
     assert!(res.release_offset == 0);
 }

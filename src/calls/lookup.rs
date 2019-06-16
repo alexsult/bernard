@@ -6,22 +6,22 @@ use Bernard;
 use Entity;
 
 #[derive(Debug)]
-pub struct BernardLookup<'a> {
+pub struct Lookup<'a> {
     bernard: &'a mut Bernard,
     mbid: Uuid,
     includes: Vec<String>,
 }
 
-impl<'a> BernardLookup<'a> {
-    pub fn new(bernard: &'a mut Bernard, mbid: &'a str) -> BernardLookup<'a> {
-        BernardLookup {
+impl<'a> Lookup<'a> {
+    pub fn new(bernard: &'a mut Bernard, mbid: &'a str) -> Lookup<'a> {
+        Lookup {
             bernard: bernard,
             mbid: Uuid::parse_str(mbid).unwrap(),
             includes: Vec::new(),
         }
     }
 
-    pub fn include(&'a mut self, param: &str) -> &'a mut BernardLookup {
+    pub fn include(&'a mut self, param: &str) -> &'a mut Lookup {
         self.includes.push(param.to_string());
         self
     }

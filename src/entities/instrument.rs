@@ -1,6 +1,6 @@
+use entities::alias::Alias;
+use entities::tag::Tag;
 use uuid::Uuid;
-use entity::tag::Tag;
-use entity::alias::Alias;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]

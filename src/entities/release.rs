@@ -1,20 +1,19 @@
-use std::io;
+use entities::area::Area;
+use entities::artist::ArtistCredit;
+use entities::collection::Collection;
+use entities::cover_art_archive::CoverArtArchive;
+use entities::label::{Label, LabelInfo};
+use entities::media::Media;
+use entities::release_group::ReleaseGroup;
+use enums::*;
 use futures;
 use futures::{Future, Stream};
 use hyper;
+use serde_json;
+use std::io;
 use text_representation::TextRepresentation;
 use traits::Entity;
 use uuid::Uuid;
-use enums::*;
-use serde_json;
-use entity::area::Area;
-use entity::collection::Collection;
-use entity::artist::ArtistCredit;
-use entity::cover_art_archive::CoverArtArchive;
-use entity::label::{LabelInfo, Label};
-use entity::media::Media;
-use entity::release_group::ReleaseGroup;
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
@@ -81,7 +80,6 @@ pub struct Release {
 
 impl Release {
     pub fn new(title: String, text_representation: TextRepresentation) -> Release {
-
         let mut release = Release::empty();
 
         release.title = title;

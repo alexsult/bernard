@@ -3,7 +3,7 @@ use bernard::*;
 
 #[test]
 fn test_cover_art_archive_instantation() {
-    let a = entity::cover_art_archive::CoverArtArchive::new(true,
+    let a = entities::cover_art_archive::CoverArtArchive::new(true,
                                                             true,
                                                             false,
                                                             1,

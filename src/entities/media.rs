@@ -1,6 +1,6 @@
+use entities::disc::Disc;
+use entities::track::Track;
 use uuid::Uuid;
-use entity::disc::Disc;
-use entity::track::Track;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -19,7 +19,6 @@ pub struct Media {
 
 impl Media {
     pub fn new(title: String, position: i32, track_count: i32, discs: Vec<Disc>) -> Media {
-
         let mut media = Media::empty();
 
         media.title = title;

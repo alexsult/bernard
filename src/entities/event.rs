@@ -1,13 +1,12 @@
-use std::io;
-use hyper;
+use entities::life_span::LifeSpan;
+use entities::relation::Relation;
 use futures;
 use futures::{Future, Stream};
-use uuid::Uuid;
+use hyper;
 use serde_json;
+use std::io;
 use traits::Entity;
-use entity::life_span::LifeSpan;
-use entity::relation::Relation;
-
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -29,7 +28,6 @@ pub struct Event {
 
 impl Event {
     pub fn new(name: String, canceled: bool) -> Event {
-
         let mut event = Event::empty();
 
         event.name = name;

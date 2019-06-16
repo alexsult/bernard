@@ -7,7 +7,6 @@ pub struct Tag {
 
 impl Tag {
     pub fn new(name: String, count: i32) -> Tag {
-
         let mut tag = Tag::empty();
 
         tag.name = name;

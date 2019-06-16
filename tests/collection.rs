@@ -3,7 +3,7 @@ use bernard::*;
 
 #[test]
 fn test_collection_instantation() {
-    let a = entity::collection::Collection::new(String::from("CD Collection"),
+    let a = entities::collection::Collection::new(String::from("CD Collection"),
                                                String::from("vphill"),
                                                String::from("release"),
                                                String::from("Release"),

@@ -3,8 +3,8 @@ use futures;
 use futures::{Future, Stream};
 use hyper;
 use uuid::Uuid;
-use entity::area::Area;
-use entity::life_span::LifeSpan;
+use entities::area::Area;
+use entities::life_span::LifeSpan;
 use serde_json;
 use traits::Entity;
 

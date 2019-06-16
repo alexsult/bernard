@@ -3,7 +3,7 @@ use bernard::*;
 
 #[test]
 fn test_alias_instantation() {
-    let mut a = entity::alias::Alias::new(
+    let mut a = entities::alias::Alias::new(
         String::from("Los Beatles"),
         String::from("Los Beatles"),
     );

@@ -1,15 +1,14 @@
-use std::io;
+use entities::artist::ArtistCredit;
+use entities::release::Release;
+use enums::*;
 use futures;
 use futures::{Future, Stream};
 use hyper;
-use uuid::Uuid;
-use enums::*;
-use std::fmt;
-use traits::Entity;
 use serde_json;
-use entity::artist::ArtistCredit;
-use entity::release::Release;
-
+use std::fmt;
+use std::io;
+use traits::Entity;
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -29,7 +28,6 @@ pub struct ReleaseGroup {
 
 impl ReleaseGroup {
     pub fn new(title: String, primary_type: AlbumType, primary_type_id: Uuid) -> ReleaseGroup {
-
         let mut release_group = ReleaseGroup::empty();
 
         release_group.title = title;

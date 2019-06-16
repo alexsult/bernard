@@ -1,4 +1,4 @@
-use entity::artist::ArtistCredit;
+use entities::artist::ArtistCredit;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

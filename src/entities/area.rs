@@ -1,14 +1,14 @@
-use std::io;
-use futures::{Future, Stream};
+use entities::alias::Alias;
+use entities::life_span::LifeSpan;
+use entities::relation::Relations;
+use entities::tag::Tag;
 use futures;
+use futures::{Future, Stream};
 use hyper;
-use uuid::Uuid;
 use serde_json;
+use std::io;
 use traits::Entity;
-use entity::tag::Tag;
-use entity::alias::Alias;
-use entity::relation::Relations;
-use entity::life_span::LifeSpan;
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -38,7 +38,6 @@ pub struct Area {
 
 impl Area {
     pub fn new(name: String, sort_name: String) -> Area {
-
         let mut area = Area::empty();
 
         area.name = name;

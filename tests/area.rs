@@ -4,7 +4,7 @@ use bernard::*;
 
 #[test]
 fn test_area_instantation() {
-    let mut a = entity::area::Area::new(
+    let mut a = entities::area::Area::new(
         String::from("France"),
         String::from("France"),
     );
@@ -34,7 +34,7 @@ fn test_area_deserialization(){
         "name": "Canada"
     }"#;
 
-    let res: entity::area::Area = serde_json::from_str(json_data).unwrap();
+    let res: entities::area::Area = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.name, "Canada");
     assert_eq!(res.sort_name, "Canada");
     assert_eq!(res.iso_3166_1_codes.unwrap()[0], "CA");
@@ -74,7 +74,7 @@ fn test_area_with_relation_list_parsing(){
             ]
         }"#;
 
-    let res: entity::area::Area = serde_json::from_str(json_data).unwrap();
+    let res: entities::area::Area = serde_json::from_str(json_data).unwrap();
 
     let relation_list = res.relation_list.unwrap(); 
     assert_eq!(relation_list.len(), 1);

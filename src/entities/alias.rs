@@ -15,7 +15,6 @@ pub struct Alias {
 
 impl Alias {
     pub fn new(name: String, sort_name: String) -> Alias {
-
         let mut alias = Alias::empty();
 
         alias.name = name;

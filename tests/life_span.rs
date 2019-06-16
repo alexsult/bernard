@@ -4,7 +4,7 @@ use bernard::*;
 
 #[test]
 fn test_life_instantation() {
-    let a = entity::life_span::LifeSpan::new(Some(String::from("1981-01-05")),
+    let a = entities::life_span::LifeSpan::new(Some(String::from("1981-01-05")),
                                              None,
                                              Some(false));
 
@@ -24,6 +24,6 @@ fn life_span_parsing() {
         "end": null
         }"#;
     
-    let res: entity::life_span::LifeSpan = serde_json::from_str(json_data).unwrap();
+    let res: entities::life_span::LifeSpan = serde_json::from_str(json_data).unwrap();
     assert!(res.begin.as_ref().unwrap() == "1981-01-05");
 }

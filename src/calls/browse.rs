@@ -5,88 +5,85 @@ use Bernard;
 use Entity;
 
 #[derive(Debug)]
-pub struct BernardBrowse<'a> {
+pub struct Browse<'a> {
     bernard: &'a mut Bernard,
-    includes: Vec<String>
+    includes: Vec<String>,
 }
 
-impl<'a> BernardBrowse<'a> {
-    pub fn new(
-        bernard: &'a mut Bernard,
-    ) -> BernardBrowse<'a> {
-
-        BernardBrowse {
+impl<'a> Browse<'a> {
+    pub fn new(bernard: &'a mut Bernard) -> Browse<'a> {
+        Browse {
             bernard: bernard,
-            includes: Vec::new()
+            includes: Vec::new(),
         }
     }
 
-    pub fn area(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn area(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("area", &param);
         self
     }
 
-    pub fn artist(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn artist(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("artist", &param);
         self
     }
 
-    pub fn collection(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn collection(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("collection", &param);
         self
     }
 
-    pub fn editor(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn editor(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("editor", &param);
         self
     }
 
-    pub fn event(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn event(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("event", &param);
         self
     }
 
-    pub fn label(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn label(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("label", &param);
         self
     }
 
-    pub fn place(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn place(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("place", &param);
         self
     }
 
-    pub fn recording(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn recording(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("recording", &param);
         self
     }
 
-    pub fn release(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn release(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("release", &param);
         self
     }
 
-    pub fn release_group(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn release_group(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("release-group", &param);
         self
     }
 
-    pub fn track(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn track(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("track", &param);
         self
     }
 
-    pub fn track_artist(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn track_artist(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("track_artist", &param);
         self
     }
 
-    pub fn work(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn work(&'a mut self, param: &str) -> &'a mut Browse {
         self.bernard.set_entity("work", &param);
         self
     }
 
-    pub fn include(&'a mut self, param: &str) -> &'a mut BernardBrowse {
+    pub fn include(&'a mut self, param: &str) -> &'a mut Browse {
         self.includes.push(param.to_string());
         self
     }
@@ -100,14 +97,13 @@ impl<'a> BernardBrowse<'a> {
         for include in &self.includes {
             if inc.len() == 0 {
                 inc = format!("{}", include)
-            }
-            else {
+            } else {
                 inc = format!("{},{}", inc, include)
             }
         }
 
         if inc.len() > 0 {
-            self.bernard.set_param("inc", &inc) ;
+            self.bernard.set_param("inc", &inc);
         }
 
         return T::browse(self.bernard);

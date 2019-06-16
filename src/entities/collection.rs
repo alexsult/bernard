@@ -22,7 +22,6 @@ impl Collection {
         collection_type: String,
         collection_type_id: Uuid,
     ) -> Collection {
-
         let mut collection = Collection::empty();
 
         collection.name = name;

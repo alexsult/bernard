@@ -1,4 +1,4 @@
-use entity::release::Release;
+use entities::release::Release;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -13,7 +13,6 @@ pub struct Disc {
 
 impl Disc {
     pub fn new(sectors: i32, offset_count: i32, offsets: Vec<i32>) -> Disc {
-
         let mut disc = Disc::empty();
 
         disc.sectors = sectors;

@@ -5,7 +5,7 @@ use enums;
 
 #[test]
 fn test_relation_instantation() {
-    let a = entity::relation::Relation::new(enums::Direction::Backward,
+    let a = entities::relation::Relation::new(enums::Direction::Backward,
                                             String::from("main performer"));
 
     assert_eq!(a.direction, enums::Direction::Backward);
@@ -34,7 +34,7 @@ fn test_relation_parsing(){
                             }
                         }"#;
 
-    let res: entity::relation::Relation = serde_json::from_str(json_data).unwrap();
+    let res: entities::relation::Relation = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.relation_type, "part of");
     assert_eq!(res.direction, enums::Direction::Backward);
     assert_eq!(res.area.unwrap().area_type.unwrap(), "Subdivision");

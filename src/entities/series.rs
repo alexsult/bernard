@@ -1,12 +1,11 @@
-use std::io;
+use entities::relation::Relation;
 use futures;
 use futures::{Future, Stream};
 use hyper;
 use serde_json;
-use uuid::Uuid;
+use std::io;
 use traits::Entity;
-use entity::relation::Relation;
-
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -23,7 +22,6 @@ pub struct Series {
 
 impl Series {
     pub fn new(name: String) -> Series {
-
         let mut series = Series::empty();
 
         series.name = name;

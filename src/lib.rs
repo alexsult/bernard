@@ -13,14 +13,26 @@ extern crate serde_derive;
 #[macro_use]
 extern crate entity_macro;
 
+use calls::browse::Browse;
+use calls::lookup::Lookup;
+use calls::search::Search;
 use hyper::client::ResponseFuture;
 use hyper::header::USER_AGENT;
 use hyper::http::Request;
 use percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
 use std::env;
-use browse::BernardBrowse;
-use lookup::BernardLookup;
-use search::BernardSearch;
+
+pub mod calls;
+pub mod enums;
+pub mod error;
+pub mod text_representation;
+pub mod traits;
+pub mod utils;
+
+pub mod entities;
+
+pub use traits::*;
+pub use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Bernard {
@@ -66,12 +78,7 @@ impl<'a> Bernard {
     }
 
     pub fn set_entity(&'a mut self, param: &str, val: &str) -> &'a mut Bernard {
-        self.params = format!(
-            "{}&{}={}",
-            self.params,
-            param,
-            val
-        );
+        self.params = format!("{}&{}={}", self.params, param, val);
         self
     }
 
@@ -87,10 +94,7 @@ impl<'a> Bernard {
             "{}&{}={}",
             self.params,
             param,
-            utf8_percent_encode(
-                pre_encoded_val.as_str(),
-                DEFAULT_ENCODE_SET
-            ).to_string()
+            utf8_percent_encode(pre_encoded_val.as_str(), DEFAULT_ENCODE_SET).to_string()
         );
         self
     }
@@ -136,29 +140,99 @@ impl<'a> Bernard {
         self.client.request(req)
     }
 
-    pub fn lookup(&'a mut self, mbid: &'a str) -> BernardLookup {
-        BernardLookup::new(self, mbid)
+    pub fn lookup(&'a mut self, mbid: &'a str) -> Lookup {
+        Lookup::new(self, mbid)
     }
 
-    pub fn search(&'a mut self, query_param: &'a str) -> BernardSearch {
-        BernardSearch::new(self, query_param)
+    pub fn search(&'a mut self, query_param: &'a str) -> Search {
+        Search::new(self, query_param)
     }
 
-    pub fn browse(&'a mut self) -> BernardBrowse {
-        BernardBrowse::new(self)
+    pub fn browse(&'a mut self) -> Browse {
+        Browse::new(self)
     }
 }
 
-pub mod enums;
-pub mod error;
-pub mod text_representation;
-pub mod traits;
-pub mod utils;
-pub mod browse;
-pub mod lookup;
-pub mod search;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-pub mod entity;
+    #[test]
+    fn test_request_instantiation() {
+        let bernard_client = Bernard::new();
 
-pub use traits::*;
-pub use uuid::Uuid;
+        let defined_base_uri = match env::var("MBZ_WS") {
+            Ok(env_uri) => env_uri,
+            _ => String::from("http://musicbrainz.org/ws/2"),
+        };
+
+        assert_eq!(bernard_client.base_uri, defined_base_uri);
+    }
+
+    #[test]
+    fn test_set_entity() {
+        let mut bernard_client = Bernard::new();
+        let entity_mbid = "0000-1111-2222";
+        let entity_name = "test";
+
+        bernard_client.set_entity(entity_name, entity_mbid);
+
+        assert_eq!(
+            bernard_client.params,
+            format!("&{}={}", entity_name, entity_mbid)
+        );
+    }
+
+    #[test]
+    fn test_set_param() {
+        let mut bernard_client = Bernard::new();
+        let param_name = "test";
+        let param_value = "a& 23";
+
+        bernard_client.set_param(param_name, param_value);
+
+        assert_eq!(bernard_client.params, format!("&test=a%26%2023"));
+    }
+
+    #[test]
+    fn test_build_lookup_uri() {
+        let endpoint = "artist";
+        let mut bernard_client = Bernard::new();
+        let mbid = "8bef9bae-a250-4c4e-8e5e-b2f81607db2a";
+
+        bernard_client.base_uri = "http://musicbrainz.org/ws/2".to_string();
+        bernard_client.mbid = Uuid::parse_str(mbid).unwrap();
+        bernard_client.query_fmt = "fmt=json".to_string();
+        bernard_client.params = "&test=value".to_string();
+
+        bernard_client.build_lookup_uri(endpoint);
+
+        assert_eq!(
+            bernard_client.uri,
+            format!(
+                "http://musicbrainz.org/ws/2/{}/{}?fmt=json&test=value",
+                endpoint, mbid
+            )
+        );
+    }
+
+    #[test]
+    fn test_build_search_uri() {
+        let endpoint = "artist";
+        let mut bernard_client = Bernard::new();
+
+        bernard_client.base_uri = "http://musicbrainz.org/ws/2".to_string();
+        bernard_client.query_fmt = "fmt=json".to_string();
+        bernard_client.params = "&test=value".to_string();
+
+        bernard_client.build_search_uri(endpoint);
+
+        assert_eq!(
+            bernard_client.uri,
+            format!(
+                "http://musicbrainz.org/ws/2/{}/?fmt=json&test=value",
+                endpoint
+            )
+        );
+    }
+}

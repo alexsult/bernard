@@ -43,17 +43,5 @@ where
         _ => Packaging::Digipak,
     };
 
-    //let packaging_return = Packaging::NoPack;
-
-    /*
-    if packaging_return  None {
-        packaging_return = Packaging::NoPack;
-    }
-    */
-
-    println!("toto {:?}", packaging_return);
-    println!("toto {}", packaging_return);
-
-    //Ok(Packaging::NoPack)
     Ok(packaging_return)
 }

@@ -17,7 +17,6 @@ impl CoverArtArchive {
         count: i32,
         artwork: bool,
     ) -> CoverArtArchive {
-
         let mut cover_art_archive = CoverArtArchive::empty();
 
         cover_art_archive.back = back;

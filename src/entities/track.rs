@@ -1,5 +1,5 @@
-use entity::recording::Recording;
-use entity::artist::ArtistCredit;
+use entities::artist::ArtistCredit;
+use entities::recording::Recording;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17,7 +17,6 @@ pub struct Track {
 
 impl Track {
     pub fn new(title: String, number: String) -> Track {
-
         let mut track = Track::empty();
 
         track.title = title;

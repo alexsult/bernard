@@ -3,7 +3,7 @@ use bernard::*;
 
 #[test]
 fn test_track_instantation() {
-    let a = entity::track::Track::new(String::from("Creep"),
+    let a = entities::track::Track::new(String::from("Creep"),
                                           String::from("1"));
 
     assert_eq!(a.title, String::from("Creep"));

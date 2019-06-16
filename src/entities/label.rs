@@ -1,7 +1,7 @@
+use entities::area::Area;
+use entities::life_span::LifeSpan;
+use entities::release::Release;
 use uuid::Uuid;
-use entity::life_span::LifeSpan;
-use entity::release::Release;
-use entity::area::Area;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -24,7 +24,6 @@ pub struct Label {
 
 impl Label {
     pub fn new(name: String, sort_name: String) -> Label {
-
         let mut label = Label::empty();
 
         label.name = name;

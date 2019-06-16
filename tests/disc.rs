@@ -5,7 +5,7 @@ use bernard::*;
 fn test_disc_instantation() {
     let offsets = vec![182, 24292, 38705, 56272, 71325];
 
-    let a = entity::disc::Disc::new(199682,
+    let a = entities::disc::Disc::new(199682,
                                         5,
                                         offsets.clone());
 

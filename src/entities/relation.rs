@@ -1,16 +1,16 @@
-use entity::artist::Artist;
-use entity::place::Place;
-use entity::event::Event;
-use entity::area::Area;
-use entity::instrument::Instrument;
-use entity::label::Label;
-use entity::recording::Recording;
-use entity::release::Release;
-use entity::release_group::ReleaseGroup;
-use entity::series::Series;
-use entity::work::Work;
-use uuid::Uuid;
+use entities::area::Area;
+use entities::artist::Artist;
+use entities::event::Event;
+use entities::instrument::Instrument;
+use entities::label::Label;
+use entities::place::Place;
+use entities::recording::Recording;
+use entities::release::Release;
+use entities::release_group::ReleaseGroup;
+use entities::series::Series;
+use entities::work::Work;
 use enums::Direction;
+use uuid::Uuid;
 
 // TODO get the different relation types
 
@@ -44,7 +44,6 @@ pub struct Relation {
 
 impl Relation {
     pub fn new(direction: Direction, relation_type: String) -> Relation {
-
         let mut relation = Relation::empty();
 
         relation.direction = direction;
@@ -93,7 +92,9 @@ pub struct Relations {
 
 impl Relations {
     pub fn new(relations: Vec<Relation>) -> Relations {
-        Relations { relations: relations }
+        Relations {
+            relations: relations,
+        }
     }
 
     pub fn empty() -> Relations {

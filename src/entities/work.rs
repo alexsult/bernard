@@ -1,14 +1,13 @@
-use std::io;
+use entities::artist::ArtistCredit;
+use entities::relation::Relation;
+use entities::tag::Tag;
 use futures;
 use futures::{Future, Stream};
 use hyper;
 use serde_json;
-use uuid::Uuid;
+use std::io;
 use traits::Entity;
-use entity::artist::ArtistCredit;
-use entity::tag::Tag;
-use entity::relation::Relation;
-
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Entity)]
 #[serde(rename_all = "kebab-case")]
@@ -29,7 +28,6 @@ pub struct Work {
 
 impl Work {
     pub fn new(title: String) -> Work {
-
         let mut work = Work::empty();
 
         work.title = title;

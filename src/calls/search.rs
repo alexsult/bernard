@@ -5,20 +5,16 @@ use Bernard;
 use Entity;
 
 #[derive(Debug)]
-pub struct BernardSearch<'a> {
+pub struct Search<'a> {
     bernard: &'a mut Bernard,
-    query_param: &'a str
+    query_param: &'a str,
 }
 
-impl<'a> BernardSearch<'a> {
-    pub fn new(
-        bernard: &'a mut Bernard,
-        query_param: &'a str
-    ) -> BernardSearch<'a> {
-
-        BernardSearch {
+impl<'a> Search<'a> {
+    pub fn new(bernard: &'a mut Bernard, query_param: &'a str) -> Search<'a> {
+        Search {
             bernard: bernard,
-            query_param: query_param
+            query_param: query_param,
         }
     }
 
@@ -26,7 +22,7 @@ impl<'a> BernardSearch<'a> {
     where
         T: Entity,
     {
-        self.bernard.set_param("query", self.query_param) ;
+        self.bernard.set_param("query", self.query_param);
         return T::search(self.bernard);
     }
 }

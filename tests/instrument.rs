@@ -4,7 +4,7 @@ use bernard::*;
 
 #[test]
 fn test_instrument_instantation() {
-    let a = entity::instrument::Instrument::new(String::from("oud"));
+    let a = entities::instrument::Instrument::new(String::from("oud"));
 
     assert_eq!(a.name, String::from("oud"));
 }
@@ -57,7 +57,7 @@ fn test_instrument_parsing(){
             ]
         }"#;
     
-    let res: entity::instrument::Instrument = serde_json::from_str(json_data).unwrap();
+    let res: entities::instrument::Instrument = serde_json::from_str(json_data).unwrap();
     assert_eq!(res.instrument_type.unwrap(), "String instrument");
     assert_eq!(&res.aliases.unwrap()[0].clone().locale.unwrap(), "ja");
 }

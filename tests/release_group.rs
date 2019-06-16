@@ -5,7 +5,7 @@ use enums;
 
 #[test]
 fn test_release_group_instantation() {
-    let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
+    let mut a = entities::release_group::ReleaseGroup::new(String::from("Creep"),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
 
@@ -18,7 +18,7 @@ fn test_release_group_instantation() {
 
 #[test]
 fn test_release_group_eq() {
-    let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
+    let mut a = entities::release_group::ReleaseGroup::new(String::from("Creep"),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
     
@@ -28,13 +28,13 @@ fn test_release_group_eq() {
 
 #[test]
 fn test_release_group_ne() {
-    let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
+    let mut a = entities::release_group::ReleaseGroup::new(String::from("Creep"),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
     
     a.id = Some(Uuid::parse_str("c5bc370b-95c2-3634-bb89-51bb2dce97c3").unwrap());
     
-    let mut b = entity::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
+    let mut b = entities::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
                                                          enums::AlbumType::Album,
                                                          Uuid::parse_str("f529b476-6e62-324f-b0aa-1f3e33d313fc").unwrap());
     
@@ -46,13 +46,13 @@ fn test_release_group_ne() {
 #[test]
 #[should_panic]
 fn test_release_group_neq_panic() {
-    let mut a = entity::release_group::ReleaseGroup::new(String::from("Creep"),
+    let mut a = entities::release_group::ReleaseGroup::new(String::from("Creep"),
                                                          enums::AlbumType::Single,
                                                          Uuid::parse_str("d6038452-8ee0-3f68-affc-2de9a1ede0b9").unwrap());
     
     a.id = Some(Uuid::parse_str("c5bc370b-95c2-3634-bb89-51bb2dce97c3").unwrap());
     
-    let b = entity::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
+    let b = entities::release_group::ReleaseGroup::new(String::from("Mixmag Presents: Tech-Trance-Electro Madness"),
                                                          enums::AlbumType::Album,
                                                          Uuid::parse_str("f529b476-6e62-324f-b0aa-1f3e33d313fc").unwrap());
     
@@ -80,7 +80,7 @@ fn test_release_group_parsing(){
             "disambiguation": ""
     }"#;
 
-    let res: entity::release_group::ReleaseGroup = serde_json::from_str(json_data).unwrap();
+    let res: entities::release_group::ReleaseGroup = serde_json::from_str(json_data).unwrap();
     assert!(res.disambiguation.as_ref().unwrap() == "");
     assert!(res.primary_type == enums::AlbumType::Album);
 }
